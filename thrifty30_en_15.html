@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thrifty30 — Eat Well, Spend Less | 30-Day Healthy Meal Program</title>
+    <meta name="description" content="Thrifty30 is a 30-day healthy meal program with 180+ detailed recipes for under $6/day. Breakfast, lunch, snack, dinner, drink and dessert — all nutritious, delicious and budget-friendly.">
+    <meta name="keywords" content="healthy meal plan, budget meal prep, 30 day nutrition program, cheap healthy recipes, meal planning, thrifty eating, healthy on a budget">
+    <meta name="author" content="Thrifty30">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://cooki-ai.github.io/thrifty30/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cooki-ai.github.io/thrifty30/">
+    <meta property="og:title" content="Thrifty30 — Eat Well, Spend Less">
+    <meta property="og:description" content="30 days of complete, balanced, and delicious menus for under $6 a day. 180+ detailed recipes with step-by-step instructions, nutrition info and cook mode.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1200">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Thrifty30 — Eat Well, Spend Less">
+    <meta name="twitter:description" content="30 days of complete, balanced, and delicious menus for under $6 a day.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1200">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --sage: #5f7a61;
+            --sage-light: #8aaa8c;
+            --sage-dark: #3d5240;
+            --cream: #faf8f3;
+            --warm: #f0ebe0;
+            --gold: #c9944a;
+            --gold-light: #e8c08a;
+            --ink: #1a1a18;
+            --muted: #6b6b60;
+            --bg: #fdfcfb;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        .serif-cg { font-family: 'Cormorant Garamond', serif; }
+        .serif-pd { font-family: 'Playfair Display', serif; }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+        }
+
+        /* ═══ LANDING STYLES ═══ */
+        .lp-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 24px 60px; display: flex; justify-content: space-between; align-items: center; transition: all 0.4s; }
+        .lp-nav.scrolled { background: rgba(26,26,24,0.92); backdrop-filter: blur(20px); padding: 16px 60px; }
+        .lp-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; color: var(--cream); }
+        .lp-logo span { color: var(--gold-light); }
+
+        .btn-nav-cta { background: var(--cream); color: var(--ink); border: none; padding: 12px 28px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-radius: 100px; transition: all 0.3s; }
+        .btn-nav-cta:hover { background: var(--gold-light); }
+
+        .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+        .hero-left { background: var(--sage-dark); display: flex; flex-direction: column; justify-content: center; padding: 160px 80px 80px; position: relative; }
+        .hero-left::after { content: ''; position: absolute; right: -1px; top: 0; bottom: 0; width: 120px; background: var(--sage-dark); clip-path: polygon(0 0, 0 100%, 100% 100%); z-index: 2; }
+
+        .hero-eyebrow { font-size: 0.68rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold-light); font-weight: 600; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
+        .hero-eyebrow::before { content: ''; display: block; width: 40px; height: 1px; background: var(--gold); }
+
+        .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 5vw, 6rem); font-weight: 300; line-height: 1.05; color: var(--cream); margin-bottom: 40px; }
+        .hero-title em { font-style: italic; color: var(--gold-light); }
+
+        .hero-desc { font-size: 1rem; line-height: 1.8; color: rgba(250,248,243,0.65); max-width: 380px; margin-bottom: 60px; font-weight: 300; }
+        .hero-actions { display: flex; gap: 20px; align-items: center; }
+
+        .btn-primary { background: var(--gold); color: white; border: none; padding: 18px 44px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-radius: 100px; transition: all 0.4s cubic-bezier(0.2,0,0.2,1); }
+        .btn-primary:hover { background: var(--gold-light); transform: translateY(-3px); box-shadow: 0 20px 40px rgba(201,148,74,0.3); }
+
+        .btn-ghost-hero { color: rgba(250,248,243,0.6); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: color 0.3s; background: none; border: none; }
+        .btn-ghost-hero:hover { color: var(--cream); }
+        .btn-ghost-hero svg { width: 32px; height: 32px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; padding: 8px; }
+        @media (max-width: 900px) { .btn-ghost-hero { display: none; } .hide-on-mobile { display: none !important; } .show-on-mobile { display: block !important; } }
+
+        .hero-right { position: relative; overflow: hidden; }
+        .hero-right img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85) saturate(1.1); }
+        .hero-right::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--sage-dark) 0%, transparent 50%); z-index: 1; }
+
+        .hero-stats { position: absolute; bottom: 60px; right: 60px; z-index: 2; display: flex; gap: 32px; }
+        .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 600; color: white; line-height: 1; }
+        .stat-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 6px; font-weight: 500; }
+        .stat-divider { width: 1px; background: rgba(255,255,255,0.15); align-self: stretch; }
+
+        .marquee-wrap { background: var(--gold); padding: 18px 0; overflow: hidden; }
+        .marquee-track { display: flex; animation: marquee 25s linear infinite; white-space: nowrap; }
+        .marquee-item { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: white; font-weight: 600; padding: 0 40px; display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+        .marquee-dot { width: 4px; height: 4px; background: rgba(255,255,255,0.5); border-radius: 50%; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        .philosophy { padding: 160px 60px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 100px; align-items: center; max-width: 1400px; margin: 0 auto; }
+        .phil-label { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--sage); font-weight: 600; margin-bottom: 28px; }
+        .phil-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4.5rem); font-weight: 300; line-height: 1.1; color: var(--ink); }
+        .phil-heading em { font-style: italic; color: var(--sage); }
+        .phil-text { font-size: 1rem; line-height: 1.9; color: var(--muted); margin-bottom: 32px; font-weight: 300; }
+        .phil-signature { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-style: italic; color: var(--gold); margin-top: 48px; }
+        .phil-images { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 280px 180px; gap: 16px; }
+        .phil-img-main { grid-column: 1 / -1; border-radius: 24px; overflow: hidden; }
+        .phil-img-main img, .phil-img-sm img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.2,0,0.2,1); }
+        .phil-img-sm { border-radius: 20px; overflow: hidden; }
+        .phil-img-main:hover img, .phil-img-sm:hover img { transform: scale(1.06); }
+
+        .how { background: var(--ink); padding: 160px 60px; }
+        .how-inner { max-width: 1400px; margin: 0 auto; }
+        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 100px; }
+        .section-label { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 20px; }
+        .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 300; color: var(--cream); line-height: 1.1; }
+        .section-title em { font-style: italic; color: var(--sage-light); }
+
+        .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+        .step { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); padding: 56px 40px; transition: all 0.4s; }
+        .step:hover { background: rgba(255,255,255,0.06); border-color: rgba(201,148,74,0.3); }
+        .step-num { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 300; color: rgba(255,255,255,0.06); line-height: 1; margin-bottom: 40px; }
+        .step-icon { width: 48px; height: 48px; background: var(--sage-dark); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 28px; font-size: 1.4rem; }
+        .step-title-lp { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; color: var(--cream); margin-bottom: 16px; }
+        .step-desc { font-size: 0.875rem; line-height: 1.8; color: rgba(250,248,243,0.45); font-weight: 300; }
+
+        .meals { padding: 160px 60px; max-width: 1400px; margin: 0 auto; }
+        .meals-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; grid-template-rows: 420px 280px; gap: 16px; margin-top: 80px; }
+        .meal-tile { border-radius: 24px; overflow: hidden; position: relative; cursor: pointer; }
+        .meal-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.2,0,0.2,1); filter: brightness(0.8) saturate(1.1); }
+        .meal-tile:hover img { transform: scale(1.08); }
+        .meal-tile-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,24,0.85) 0%, transparent 60%); }
+        .meal-tile-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px; }
+        .meal-tile-tag { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-light); font-weight: 700; margin-bottom: 10px; }
+        .meal-tile-name { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: white; line-height: 1.2; }
+        .meal-tile-price { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin-top: 8px; font-weight: 300; }
+        .meal-tile.large { grid-row: 1 / 3; }
+        .meal-tile.large .meal-tile-name { font-size: 2.2rem; }
+
+        .budget { background: var(--warm); padding: 120px 60px; }
+        .budget-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
+        .budget-price { font-family: 'Cormorant Garamond', serif; font-size: clamp(5rem, 10vw, 10rem); font-weight: 300; color: var(--ink); line-height: 0.9; margin: 48px 0; }
+        .budget-price span { font-style: italic; color: var(--sage); }
+        .budget-sub { font-size: 1rem; color: var(--muted); font-weight: 300; line-height: 1.8; max-width: 560px; margin: 0 auto 60px; }
+        .budget-breakdown { display: flex; justify-content: center; border: 1px solid rgba(26,26,24,0.1); border-radius: 20px; overflow: hidden; }
+        .breakdown-item { flex: 1; padding: 32px 40px; border-right: 1px solid rgba(26,26,24,0.1); }
+        .breakdown-item:last-child { border-right: none; }
+        .breakdown-val { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 600; color: var(--ink); }
+        .breakdown-key { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 6px; font-weight: 500; }
+
+        .testimonials { padding: 160px 60px; max-width: 1400px; margin: 0 auto; }
+        .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 80px; }
+        .testi-card { background: white; border-radius: 24px; padding: 48px 40px; border: 1px solid rgba(26,26,24,0.06); transition: all 0.4s; }
+        .testi-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px rgba(26,26,24,0.08); }
+        .testi-stars { color: var(--gold); font-size: 1rem; letter-spacing: 3px; margin-bottom: 28px; }
+        .testi-quote { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; line-height: 1.6; color: var(--ink); font-style: italic; margin-bottom: 36px; }
+        .testi-author { display: flex; align-items: center; gap: 16px; }
+        .testi-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--sage); display: flex; align-items: center; justify-content: center; color: white; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; flex-shrink: 0; }
+        .testi-name { font-weight: 600; font-size: 0.875rem; color: var(--ink); }
+        .testi-role { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+        .cta-final { background: var(--sage-dark); padding: 160px 60px; text-align: center; position: relative; overflow: hidden; }
+        .cta-final::before { content: '30'; position: absolute; font-family: 'Cormorant Garamond', serif; font-size: 40vw; font-weight: 700; color: rgba(255,255,255,0.02); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none !important; line-height: 1; z-index: 0; }
+        .cta-final > * { position: relative; z-index: 1; }
+        .cta-final-eyebrow { font-size: 0.68rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold-light); font-weight: 600; margin-bottom: 40px; }
+        .cta-final-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 6vw, 6.5rem); font-weight: 300; color: var(--cream); line-height: 1.05; max-width: 800px; margin: 0 auto 48px; }
+        .cta-final-title em { font-style: italic; color: var(--gold-light); }
+        .cta-final-sub { font-size: 1rem; color: rgba(250,248,243,0.5); margin-bottom: 60px; font-weight: 300; }
+
+        .lp-footer { background: var(--ink); padding: 60px; display: flex; justify-content: space-between; align-items: center; }
+        .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--cream); }
+        .footer-logo span { color: var(--gold); }
+        .footer-copy { font-size: 0.75rem; color: rgba(250,248,243,0.3); }
+        .footer-links { display: flex; gap: 32px; }
+        .footer-links button { font-size: 0.75rem; color: rgba(250,248,243,0.4); background: none; border: none; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; cursor: pointer; transition: color 0.3s; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .footer-links button:hover { color: var(--gold-light); }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.2,0,0.2,1), transform 0.9s cubic-bezier(0.2,0,0.2,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.15s; }
+        .reveal-delay-2 { transition-delay: 0.3s; }
+        .reveal-delay-3 { transition-delay: 0.45s; }
+
+        /* ═══ APP STYLES ═══ */
+        .app-header { position: sticky; top: 0; z-index: 50; background: rgba(253,252,251,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(231,229,228,0.6); box-shadow: 0 1px 20px rgba(0,0,0,0.04); }
+        .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); }
+        .nav-button-active { background-color: var(--sage); color: white; box-shadow: 0 8px 20px rgba(95,122,97,0.25); }
+        .progress-ring-circle { transition: stroke-dashoffset 0.8s cubic-bezier(0.4,0,0.2,1); transform: rotate(-90deg); transform-origin: 50% 50%; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        .meal-card-img { height: 240px; object-fit: cover; transition: transform 0.8s cubic-bezier(0.2,0,0.2,1); }
+        .meal-card:hover .meal-card-img { transform: scale(1.1); }
+        .meal-transition { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .badge-tag { font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; font-weight: 700; }
+        .img-overlay { background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%); }
+
+        .modal-tab { padding: 10px 22px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; background: none; }
+        .modal-tab.active { background: #1a1a18; color: white; }
+        .modal-tab:not(.active) { color: #9ca3af; border-color: #e5e7eb; }
+        .modal-tab:not(.active):hover { border-color: #9ca3af; color: #1a1a18; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .nutrition-bar { height: 6px; border-radius: 999px; background: #f3f4f6; overflow: hidden; margin-top: 8px; }
+        .nutrition-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #5f7a61, #8aaa8c); }
+        .tip-card { background: linear-gradient(135deg, #f0f9f0, #e8f5e9); border: 1px solid #c8e6c9; border-radius: 16px; padding: 20px 24px; display: flex; gap: 14px; align-items: flex-start; }
+        .step-bubble { width: 36px; height: 36px; border-radius: 12px; background: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 900; color: #1a1a18; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .step-duration { display: inline-block; background: #f3f4f6; color: #6b7280; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; margin-top: 6px; }
+        .ingredient-row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #fafafa; border-radius: 14px; cursor: pointer; transition: all 0.2s; }
+        .ingredient-row:hover { background: #f5f5f5; }
+        .ingredient-row.checked { background: #f0f9f0; text-decoration: line-through; color: #9ca3af; }
+        .ingredient-row input[type="checkbox"] { accent-color: #5f7a61; width: 18px; height: 18px; flex-shrink: 0; }
+        .macro-pill { flex: 1; text-align: center; padding: 18px 12px; background: #fafafa; border-radius: 16px; border: 1px solid #f0f0f0; }
+        .macro-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: #1a1a18; }
+        .macro-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9ca3af; margin-top: 4px; }
+        .variation-chip { padding: 10px 20px; border: 2px solid #e5e7eb; border-radius: 999px; font-size: 0.8rem; font-weight: 500; color: #374151; cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+        .variation-chip:hover { border-color: #5f7a61; color: #5f7a61; background: #f0f9f0; }
+
+        /* ═══ FAQ ═══ */
+        .faq-section { padding: 140px 60px; background: var(--cream); }
+        .faq-inner { max-width: 860px; margin: 0 auto; }
+        .faq-item { border-bottom: 1px solid rgba(26,26,24,0.08); }
+        .faq-question { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 28px 0; background: none; border: none; cursor: pointer; text-align: left; gap: 20px; }
+        .faq-question-text { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; color: var(--ink); line-height: 1.3; }
+        .faq-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--sage); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
+        .faq-icon svg { width: 14px; height: 14px; stroke: white; transition: transform 0.3s; }
+        .faq-item.open .faq-icon { background: var(--gold); }
+        .faq-item.open .faq-icon svg { transform: rotate(45deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.2,0,0.2,1); }
+        .faq-answer-inner { padding: 0 0 28px; font-size: 0.95rem; line-height: 1.85; color: var(--muted); font-weight: 300; }
+        .faq-item.open .faq-answer { max-height: 400px; }
+
+        /* ═══ CONTACT ═══ */
+        .contact-section { padding: 140px 60px; background: white; }
+        .contact-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 100px; align-items: start; }
+        .contact-info-label { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--sage); font-weight: 600; margin-bottom: 24px; }
+        .contact-info-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 3.5vw, 3.5rem); font-weight: 300; line-height: 1.15; color: var(--ink); margin-bottom: 32px; }
+        .contact-info-title em { font-style: italic; color: var(--sage); }
+        .contact-info-text { font-size: 0.95rem; line-height: 1.85; color: var(--muted); font-weight: 300; margin-bottom: 40px; }
+        .contact-email-link { display: inline-flex; align-items: center; gap: 12px; color: var(--sage); font-weight: 600; font-size: 0.9rem; text-decoration: none; border-bottom: 1px solid var(--sage-light); padding-bottom: 4px; transition: all 0.3s; }
+        .contact-email-link:hover { color: var(--sage-dark); border-color: var(--sage-dark); }
+        .contact-form { background: var(--cream); border-radius: 28px; padding: 48px; }
+        .contact-field { margin-bottom: 20px; }
+        .contact-label { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; }
+        .contact-input { width: 100%; padding: 14px 18px; border: 2px solid #e5e7eb; border-radius: 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; color: #1a1a18; background: white; transition: all 0.2s; outline: none; }
+        .contact-input:focus { border-color: var(--sage); box-shadow: 0 0 0 4px rgba(95,122,97,0.08); }
+        .contact-textarea { resize: vertical; min-height: 130px; }
+        .contact-submit { width: 100%; padding: 16px; background: var(--sage); color: white; border: none; border-radius: 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; }
+        .contact-submit:hover:not(:disabled) { background: var(--sage-dark); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(95,122,97,0.3); }
+        .contact-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .contact-success { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 16px 20px; font-size: 0.85rem; color: #16a34a; text-align: center; display: none; margin-top: 16px; }
+        .contact-success.show { display: block; }
+
+        @media (max-width: 900px) {
+            .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+            .faq-section, .contact-section { padding: 80px 24px; }
+        }
+        .reset-overlay { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; }
+        .reset-overlay-bg { position: absolute; inset: 0; background: rgba(26,26,24,0.7); backdrop-filter: blur(8px); }
+        .reset-card { position: relative; background: white; border-radius: 32px; padding: 56px 48px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 60px 120px rgba(0,0,0,0.2); animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .reset-icon { width: 72px; height: 72px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; font-size: 2rem; }
+        .reset-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #1a1a18; margin-bottom: 16px; }
+        .reset-desc { font-size: 0.9rem; color: #6b7280; line-height: 1.7; margin-bottom: 40px; }
+        .reset-actions { display: flex; gap: 12px; }
+        .btn-cancel { flex: 1; padding: 16px; border: 2px solid #e5e7eb; border-radius: 16px; background: white; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: #6b7280; transition: all 0.3s; }
+        .btn-cancel:hover { border-color: #9ca3af; color: #1a1a18; }
+        .btn-reset-confirm { flex: 1; padding: 16px; border-radius: 16px; background: #ef4444; border: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; color: white; transition: all 0.3s; }
+        .btn-reset-confirm:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(239,68,68,0.3); }
+
+        .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(200px); background: #1a1a18; color: white; padding: 16px 28px; border-radius: 100px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.05em; z-index: 300; display: flex; align-items: center; gap: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1); visibility: hidden; }
+        .toast.show { transform: translateX(-50%) translateY(0); visibility: visible; }
+
+        /* ═══ AUTH MODAL ═══ */
+        .auth-overlay { position: fixed; inset: 0; z-index: 600; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-bg { position: absolute; inset: 0; background: rgba(26,26,24,0.8); backdrop-filter: blur(12px); }
+        .auth-card { position: relative; background: white; border-radius: 28px; width: 100%; max-width: 420px; box-shadow: 0 60px 120px rgba(0,0,0,0.25); animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; overflow: hidden; }
+        .auth-header { background: var(--ink); padding: 32px 36px 24px; position: relative; }
+        .auth-header-title { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 400; color: var(--cream); }
+        .auth-header-sub { font-size: 0.78rem; color: rgba(250,248,243,0.45); margin-top: 6px; }
+        .auth-tabs { display: flex; gap: 4px; margin-top: 20px; }
+        .auth-tab { flex: 1; padding: 8px; border-radius: 8px; border: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .auth-tab.active { background: var(--gold); color: white; }
+        .auth-tab:not(.active) { background: rgba(255,255,255,0.08); color: rgba(250,248,243,0.45); }
+        .auth-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; color: rgba(250,248,243,0.6); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s; }
+        .auth-close:hover { background: rgba(255,255,255,0.2); color: white; }
+        .auth-body { padding: 28px 36px 36px; }
+        .auth-field { margin-bottom: 16px; }
+        .auth-label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 7px; }
+        .auth-input { width: 100%; padding: 13px 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; color: #1a1a18; background: #fafafa; outline: none; transition: all 0.2s; }
+        .auth-input:focus { border-color: var(--sage); background: white; box-shadow: 0 0 0 4px rgba(95,122,97,0.08); }
+        .auth-input.error { border-color: #ef4444; background: #fef2f2; }
+        .auth-submit { width: 100%; padding: 15px; background: var(--sage); color: white; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; }
+        .auth-submit:hover:not(:disabled) { background: var(--sage-dark); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(95,122,97,0.3); }
+        .auth-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .auth-error { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 12px 16px; font-size: 0.8rem; color: #dc2626; margin-bottom: 16px; display: none; }
+        .auth-error.show { display: block; }
+        .auth-success { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 16px; font-size: 0.85rem; color: #16a34a; text-align: center; display: none; line-height: 1.6; }
+        .auth-success.show { display: block; }
+        .nav-auth-zone { display: flex; align-items: center; gap: 10px; }
+        .btn-nav-login { background: transparent; color: rgba(250,248,243,0.7); border: 1px solid rgba(250,248,243,0.2); padding: 10px 22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 100px; transition: all 0.3s; }
+        .btn-nav-login:hover { background: rgba(255,255,255,0.1); color: white; }
+        .btn-nav-user { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); padding: 8px 16px 8px 8px; border-radius: 100px; }
+        .nav-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; font-weight: 700; color: white; flex-shrink: 0; }
+        .nav-user-email { font-size: 0.72rem; font-weight: 600; color: rgba(250,248,243,0.8); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .btn-nav-logout { background: transparent; color: rgba(250,248,243,0.45); border: none; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: all 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .btn-nav-logout:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+
+        /* ═══ CHECKOUT MODAL ═══ */
+        .checkout-overlay { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .checkout-bg { position: absolute; inset: 0; background: rgba(26,26,24,0.8); backdrop-filter: blur(12px); }
+        .checkout-card {
+            position: relative;
+            background: white;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 80px 160px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        }
+        @keyframes slideUp { from { opacity:0; transform: translateY(40px) scale(0.96); } to { opacity:1; transform: translateY(0) scale(1); } }
+
+        .checkout-header {
+            background: var(--sage-dark);
+            padding: 36px 40px 28px;
+            border-radius: 32px 32px 0 0;
+            position: relative;
+        }
+
+        .checkout-badge { font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-light); font-weight: 700; margin-bottom: 12px; }
+        .checkout-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; color: var(--cream); line-height: 1.2; }
+        .checkout-price-tag {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-top: 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 100px;
+            padding: 8px 20px;
+        }
+        .checkout-price-amount { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 600; color: var(--gold-light); }
+        .checkout-price-label { font-size: 0.7rem; color: rgba(250,248,243,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+
+        .checkout-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            width: 36px; height: 36px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            color: rgba(250,248,243,0.6);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .checkout-close:hover { background: rgba(255,255,255,0.2); color: white; }
+
+        .checkout-body { padding: 32px 40px 40px; }
+
+        .checkout-field { margin-bottom: 18px; }
+        .checkout-label { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; }
+        .checkout-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            color: #1a1a18;
+            background: #fafafa;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .checkout-input:focus { border-color: var(--sage); background: white; box-shadow: 0 0 0 4px rgba(95,122,97,0.08); }
+        .checkout-input.error { border-color: #ef4444; background: #fef2f2; }
+        .checkout-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .phone-row { display: grid; grid-template-columns: 110px 1fr; gap: 10px; }
+        .checkout-select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            color: #1a1a18;
+            background: #fafafa;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+        .checkout-select:focus { border-color: var(--sage); background-color: white; box-shadow: 0 0 0 4px rgba(95,122,97,0.08); }
+
+        .field-error { font-size: 0.72rem; color: #ef4444; margin-top: 5px; display: none; }
+        .field-error.show { display: block; }
+
+        .checkout-divider { border: none; border-top: 1px solid #f0f0f0; margin: 24px 0; }
+
+        .checkout-submit {
+            width: 100%;
+            padding: 18px;
+            background: var(--sage);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .checkout-submit:hover:not(:disabled) { background: var(--sage-dark); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(95,122,97,0.3); }
+        .checkout-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .checkout-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .checkout-secure { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; font-size: 0.72rem; color: #9ca3af; }
+        .checkout-secure svg { width: 14px; height: 14px; }
+
+        .checkout-error-banner {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 0.82rem;
+            color: #dc2626;
+            margin-bottom: 18px;
+            display: none;
+        }
+        .checkout-error-banner.show { display: block; }
+
+        .checkout-already-owned {
+            text-align: center;
+            padding: 32px 0 8px;
+        }
+        .checkout-already-owned .emoji { font-size: 3rem; margin-bottom: 16px; }
+        .checkout-already-owned h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #1a1a18; margin-bottom: 10px; }
+        .checkout-already-owned p { font-size: 0.875rem; color: #6b7280; line-height: 1.6; }
+
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; }
+            .hero-right { height: 50vh; }
+            .hero-left::after { display: none; }
+            .hero-left { padding: 120px 30px 60px; }
+            .lp-nav { padding: 20px 24px; }
+            .lp-nav.scrolled { padding: 14px 24px; }
+            .philosophy { padding: 80px 30px; grid-template-columns: 1fr; gap: 40px; }
+            .steps-grid { grid-template-columns: 1fr 1fr; }
+            .testi-grid { grid-template-columns: 1fr; }
+            .meals { padding: 80px 30px; }
+            .meals-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .meal-tile.large { grid-row: auto; height: 380px; }
+            .meal-tile { height: 260px; }
+            .budget { padding: 80px 30px; }
+            .budget-breakdown { flex-wrap: wrap; }
+            .breakdown-item { border-right: none; border-bottom: 1px solid rgba(26,26,24,0.1); }
+            .how { padding: 80px 30px; }
+            .testimonials { padding: 80px 30px; }
+            .cta-final { padding: 100px 30px; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .lp-footer { flex-direction: column; gap: 24px; text-align: center; }
+            .footer-links { flex-wrap: wrap; justify-content: center; }
+            .hero-stats { right: 20px; bottom: 20px; gap: 16px; }
+            .hero-stats .stat-num { font-size: 2rem; }
+            .reset-card { padding: 40px 28px; }
+            .reset-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══════════════════════════════
+         PAGE 1: LANDING PAGE
+    ══════════════════════════════ -->
+    <div id="page-landing" class="page active">
+
+        <nav class="lp-nav" id="lp-nav">
+            <div class="lp-logo">Thrifty<span>30</span></div>
+            <div class="nav-auth-zone" id="nav-auth-zone">
+                <!-- Shown when logged out -->
+                <div id="nav-loggedout" style="display:flex;align-items:center;gap:10px;">
+                    <button class="btn-nav-login" onclick="openAuthModal('login')">Sign In</button>
+                    <button class="btn-nav-cta" onclick="openCheckout()">Get Access — $4.50 →</button>
+                </div>
+                <!-- Shown when logged in -->
+                <div id="nav-loggedin" style="display:none;align-items:center;gap:10px;">
+                    <div class="btn-nav-user">
+                        <div class="nav-avatar" id="nav-avatar-letter">?</div>
+                        <span class="nav-user-email" id="nav-user-email">...</span>
+                    </div>
+                    <button class="btn-nav-logout" onclick="signOut()">Sign out</button>
+                    <button class="btn-nav-cta" onclick="goToApp()">My Program →</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-left">
+                <p class="hero-eyebrow">Nutrition Program · 30 Days</p>
+                <h1 class="hero-title serif-cg">
+                    Eat<br>
+                    <em>Brilliantly</em><br>
+                    For Less
+                </h1>
+                <p class="hero-desc">
+                    Thrifty30 reimagines the relationship between great food and a tight budget.
+                    30 days of complete, balanced, and delicious menus —
+                    for under $6 a day.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="openCheckout()">Get Access — $4.50</button>
+                    <button class="btn-ghost-hero" onclick="document.getElementById('lp-philosophy').scrollIntoView({behavior:'smooth'})">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        Learn more
+                    </button>
+                </div>
+            </div>
+            <div class="hero-right">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=1200" alt="Colorful Buddha Bowl">
+                <div class="hero-stats">
+                    <div class="stat"><div class="stat-num">30</div><div class="stat-label">Days of meals</div></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat"><div class="stat-num">$6</div><div class="stat-label">Per day</div></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat"><div class="stat-num">180+</div><div class="stat-label">Detailed recipes</div></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="marquee-wrap">
+            <div class="marquee-track">
+                <span class="marquee-item">Breakfast <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Lunch <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Healthy Snacks <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Light Dinners <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Natural Drinks <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Guilt-Free Desserts <span class="marquee-dot"></span></span>
+                <span class="marquee-item">100% Vegetarian <span class="marquee-dot"></span></span>
+                <span class="marquee-item">High in Fiber <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Breakfast <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Lunch <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Healthy Snacks <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Light Dinners <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Natural Drinks <span class="marquee-dot"></span></span>
+                <span class="marquee-item">Guilt-Free Desserts <span class="marquee-dot"></span></span>
+                <span class="marquee-item">100% Vegetarian <span class="marquee-dot"></span></span>
+                <span class="marquee-item">High in Fiber <span class="marquee-dot"></span></span>
+            </div>
+        </div>
+
+        <section class="philosophy" id="lp-philosophy">
+            <div>
+                <p class="phil-label reveal">Our Philosophy</p>
+                <h2 class="phil-heading reveal reveal-delay-1">Eating well<br>shouldn't cost<br><em>a fortune</em></h2>
+                <p class="phil-text reveal reveal-delay-2">Healthy eating is too often sold as a luxury. Overpriced superfoods, pricey subscriptions, hard-to-find ingredients. Thrifty30 proves otherwise — elegantly.</p>
+                <p class="phil-text reveal reveal-delay-2">Every recipe is designed to be accessible, flavorful, and nutritionally complete. Simple ingredients, clear preparation, exceptional results.</p>
+                <p class="phil-signature reveal reveal-delay-3">— The Thrifty30 Team</p>
+            </div>
+            <div class="phil-images reveal reveal-delay-1">
+                <div class="phil-img-main"><img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=900" alt="Healthy colorful meal"></div>
+                <div class="phil-img-sm"><img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80&w=600" alt="Avocado toast"></div>
+                <div class="phil-img-sm"><img src="https://images.unsplash.com/photo-1517673400267-0251440c45dc?auto=format&fit=crop&q=80&w=600" alt="Bircher muesli"></div>
+            </div>
+        </section>
+
+        <section class="how">
+            <div class="how-inner">
+                <div class="section-header">
+                    <div>
+                        <p class="section-label reveal">How It Works</p>
+                        <h2 class="section-title reveal reveal-delay-1">Simple as<br><em>that</em></h2>
+                    </div>
+                </div>
+                <div class="steps-grid">
+                    <div class="step reveal"><div class="step-num">01</div><div class="step-icon">📅</div><h3 class="step-title-lp">Choose your day</h3><p class="step-desc">Browse freely through all 30 days. Start at day one or jump straight to today's menu.</p></div>
+                    <div class="step reveal reveal-delay-1"><div class="step-num">02</div><div class="step-icon">🍽️</div><h3 class="step-title-lp">Discover your meals</h3><p class="step-desc">6 meal moments per day: breakfast, lunch, snack, dinner, drink, and dessert. Each fully detailed.</p></div>
+                    <div class="step reveal reveal-delay-2"><div class="step-num">03</div><div class="step-icon">👨‍🍳</div><h3 class="step-title-lp">Cook in guided mode</h3><p class="step-desc">Open cook mode for any recipe. Step-by-step instructions, ingredient checklist, and timers.</p></div>
+                    <div class="step reveal reveal-delay-3"><div class="step-num">04</div><div class="step-icon">✅</div><h3 class="step-title-lp">Track your progress</h3><p class="step-desc">Mark each day as complete. Your progress ring keeps you motivated all the way to day 30.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="meals">
+            <div class="section-header">
+                <div>
+                    <p class="section-label reveal">On the Menu</p>
+                    <h2 class="section-title reveal reveal-delay-1" style="color: var(--ink);">Recipes that<br><em style="color: var(--sage);">make you hungry</em></h2>
+                </div>
+            </div>
+            <div class="meals-grid">
+                <div class="meal-tile large reveal"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=900" alt="Buddha Bowl"><div class="meal-tile-overlay"></div><div class="meal-tile-content"><p class="meal-tile-tag">⭐ Signature · Lunch</p><h3 class="meal-tile-name">Quinoa & Sweet Potato Buddha Bowl</h3><p class="meal-tile-price">$1.90 · 20 min · Vitamins & Energy</p></div></div>
+                <div class="meal-tile reveal reveal-delay-1"><img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80&w=600" alt="Avocado Toast"><div class="meal-tile-overlay"></div><div class="meal-tile-content"><p class="meal-tile-tag">Breakfast</p><h3 class="meal-tile-name">Avocado Toast & Poached Eggs</h3><p class="meal-tile-price">$1.45 · 10 min</p></div></div>
+                <div class="meal-tile reveal reveal-delay-2"><img src="https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&q=80&w=600" alt="Mushroom Risotto"><div class="meal-tile-overlay"></div><div class="meal-tile-content"><p class="meal-tile-tag">Dinner</p><h3 class="meal-tile-name">Barley & Mushroom Risotto</h3><p class="meal-tile-price">$1.60 · 25 min</p></div></div>
+                <div class="meal-tile reveal reveal-delay-1"><img src="https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd?auto=format&fit=crop&q=80&w=600" alt="Green Smoothie"><div class="meal-tile-overlay"></div><div class="meal-tile-content"><p class="meal-tile-tag">Snack</p><h3 class="meal-tile-name">Detox Green Smoothie</h3><p class="meal-tile-price">$0.90 · 3 min</p></div></div>
+                <div class="meal-tile reveal reveal-delay-2"><img src="https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&q=80&w=600" alt="Chocolate Mousse"><div class="meal-tile-overlay"></div><div class="meal-tile-content"><p class="meal-tile-tag">Dessert</p><h3 class="meal-tile-name">Aquafaba Dark Chocolate Mousse</h3><p class="meal-tile-price">$0.80 · 15 min</p></div></div>
+            </div>
+        </section>
+
+        <section class="budget">
+            <div class="budget-inner">
+                <p class="section-label reveal" style="text-align:center">The Real Cost</p>
+                <p class="reveal reveal-delay-1" style="font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--muted); font-style:italic; text-align:center;">A full day of meals for just</p>
+                <div class="budget-price reveal reveal-delay-2"><span>$6</span><span style="font-size:40%;">/day</span></div>
+                <p class="budget-sub reveal reveal-delay-3">Breakfast, lunch, snack, dinner, drink, and dessert included. Zero compromise on quality, zero guilt on your wallet.</p>
+                <div class="budget-breakdown reveal reveal-delay-3">
+                    <div class="breakdown-item"><div class="breakdown-val">~$1.10</div><div class="breakdown-key">Breakfast</div></div>
+                    <div class="breakdown-item"><div class="breakdown-val">~$1.90</div><div class="breakdown-key">Lunch</div></div>
+                    <div class="breakdown-item"><div class="breakdown-val">~$0.90</div><div class="breakdown-key">Snack</div></div>
+                    <div class="breakdown-item"><div class="breakdown-val">~$1.60</div><div class="breakdown-key">Dinner</div></div>
+                    <div class="breakdown-item"><div class="breakdown-val">~$0.60</div><div class="breakdown-key">Drink + Dessert</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <div class="section-header">
+                <div>
+                    <p class="section-label reveal">Testimonials</p>
+                    <h2 class="section-title reveal reveal-delay-1" style="color: var(--ink);">They <em style="color: var(--sage);">transformed</em><br>their plate</h2>
+                </div>
+            </div>
+            <div class="testi-grid">
+                <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><p class="testi-quote">"I never thought I could eat this well on such a small budget. The Buddha Bowl has become my Monday ritual."</p><div class="testi-author"><div class="testi-avatar">M</div><div><div class="testi-name">Mia L.</div><div class="testi-role">College Student · Austin, TX</div></div></div></div>
+                <div class="testi-card reveal reveal-delay-1"><div class="testi-stars">★★★★★</div><p class="testi-quote">"The aquafaba mousse blew everyone away. Nobody believes it costs under a dollar to make."</p><div class="testi-author"><div class="testi-avatar" style="background:var(--gold);">T</div><div><div class="testi-name">Tyler R.</div><div class="testi-role">Home Cook · Portland, OR</div></div></div></div>
+                <div class="testi-card reveal reveal-delay-2"><div class="testi-stars">★★★★★</div><p class="testi-quote">"All 30 days done. I saved over $200 compared to my usual habits and I feel better than ever."</p><div class="testi-author"><div class="testi-avatar" style="background:var(--sage-dark);">S</div><div><div class="testi-name">Sarah K.</div><div class="testi-role">Nurse · Denver, CO</div></div></div></div>
+            </div>
+        </section>
+
+        <!-- ══ FAQ ══ -->
+        <section class="faq-section" id="lp-faq">
+            <div class="faq-inner">
+                <div style="text-align:center; margin-bottom: 80px;">
+                    <p class="section-label reveal">FAQ</p>
+                    <h2 class="section-title reveal reveal-delay-1" style="color:var(--ink);">Your questions,<br><em style="color:var(--sage);">answered</em></h2>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">What exactly is Thrifty30?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">Thrifty30 is a 30-day nutrition program that provides you with complete daily menus — breakfast, lunch, snack, dinner, drink, and dessert — all designed to cost under $6 per day. Each recipe includes step-by-step instructions, ingredient lists, nutritional information, and a guided cook mode.</p></div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">How do I access the program after purchase?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">After completing your payment, you'll be automatically logged in and redirected to your program — no extra steps needed. On future visits, simply open the site and your session will be restored automatically. If you've signed out, use the "Sign In" button with your email and password.</p></div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">Is this a one-time payment or a subscription?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">Completely one-time. You pay $4.50 once and get lifetime access to all 30 days of the program. No recurring charges, no hidden fees, no subscription to cancel.</p></div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">Do I need any cooking experience?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">Not at all. Every recipe is designed for home cooks of all levels. The guided cook mode walks you through each step with clear instructions and built-in timers. If you can boil water, you can cook these meals.</p></div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">Are the ingredients easy to find?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">Yes. Every ingredient in Thrifty30 is chosen to be widely available in standard grocery stores. No exotic superfoods, no specialty health food shops required. Simple, accessible ingredients that you can find anywhere.</p></div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">Is the program suitable for vegetarians?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">Yes, 100%. All Thrifty30 recipes are fully vegetarian. Many are also vegan or easily adaptable. Each recipe includes variation suggestions so you can swap ingredients to suit your dietary preferences.</p></div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">Can I track my progress through the program?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">Yes! Each day can be marked as complete. Your progress is shown in a visual ring that updates as you advance through the 30 days, keeping you motivated from day 1 to day 30.</p></div>
+                </div>
+
+                <div class="faq-item reveal">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">What if I need help or have a problem?</span>
+                        <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></span>
+                    </button>
+                    <div class="faq-answer"><p class="faq-answer-inner">We're here for you. You can reach our support team anytime via the contact form on this page or by emailing us directly at thriftyprogramme@gmail.com. We typically respond within 24 hours.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══ CONTACT ══ -->
+        <section class="contact-section" id="lp-contact">
+            <div class="contact-inner">
+                <div>
+                    <p class="contact-info-label reveal">Get in Touch</p>
+                    <h2 class="contact-info-title reveal reveal-delay-1">We'd love to<br><em>hear from you</em></h2>
+                    <p class="contact-info-text reveal reveal-delay-2">Have a question about the program? Need help with your account? Or just want to share how your 30 days went? We read every message and respond within 24 hours.</p>
+                    <a href="mailto:thriftyprogramme@gmail.com" class="contact-email-link reveal reveal-delay-3">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        thriftyprogramme@gmail.com
+                    </a>
+                </div>
+                <div class="contact-form reveal reveal-delay-1">
+                    <div class="contact-field">
+                        <label class="contact-label">Your Name</label>
+                        <input type="text" id="ct-name" class="contact-input" placeholder="John Doe">
+                    </div>
+                    <div class="contact-field">
+                        <label class="contact-label">Email Address</label>
+                        <input type="email" id="ct-email" class="contact-input" placeholder="you@example.com">
+                    </div>
+                    <div class="contact-field">
+                        <label class="contact-label">Subject</label>
+                        <input type="text" id="ct-subject" class="contact-input" placeholder="e.g. Question about the program">
+                    </div>
+                    <div class="contact-field">
+                        <label class="contact-label">Message</label>
+                        <textarea id="ct-message" class="contact-input contact-textarea" placeholder="Tell us how we can help..."></textarea>
+                    </div>
+                    <button class="contact-submit" id="ct-submit" onclick="submitContact()">
+                        <span id="ct-label">Send Message</span>
+                        <div class="checkout-spinner" id="ct-spinner" style="display:none;"></div>
+                    </button>
+                    <div class="contact-success" id="ct-success">✅ Message sent! We'll get back to you within 24 hours.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-final">
+            <p class="cta-final-eyebrow reveal">Ready to transform your meals?</p>
+            <h2 class="cta-final-title serif-cg reveal reveal-delay-1">30 days to<br><em>reinvent</em><br>your meals</h2>
+            <p class="cta-final-sub reveal reveal-delay-2">One-time payment · Instant access · 30 days of complete menus</p>
+            <button class="btn-primary reveal reveal-delay-3" onclick="openCheckout()" style="font-size: 0.9rem; padding: 22px 56px;">Get Full Access — $4.50 →</button>
+        </section>
+
+        <footer class="lp-footer">
+            <div class="footer-logo">Thrifty<span>30</span></div>
+            <div class="footer-copy">© 2026 Thrifty30 · Accessible Gastronomy</div>
+            <div class="footer-links">
+                <button onclick="openCheckout()">Get Access</button>
+                <button onclick="document.getElementById('lp-faq').scrollIntoView({behavior:'smooth'})">FAQ</button>
+                <button onclick="document.getElementById('lp-contact').scrollIntoView({behavior:'smooth'})">Contact</button>
+                <button onclick="document.getElementById('lp-philosophy').scrollIntoView({behavior:'smooth'})">About</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ══════════════════════════════
+         AUTH MODAL (Login / Register)
+    ══════════════════════════════ -->
+    <div id="auth-modal" style="display:none;" class="auth-overlay">
+        <div class="auth-bg" onclick="closeAuthModal()"></div>
+        <div class="auth-card">
+            <div class="auth-header">
+                <button class="auth-close" onclick="closeAuthModal()">✕</button>
+                <p class="auth-header-title" id="auth-modal-title">Welcome back</p>
+                <p class="auth-header-sub" id="auth-modal-sub">Sign in to access your program</p>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tab-login-btn" onclick="switchAuthTab('login')">Sign In</button>
+                    <button class="auth-tab" id="tab-register-btn" onclick="switchAuthTab('register')">Create Account</button>
+                </div>
+            </div>
+            <div class="auth-body">
+                <div class="auth-error" id="auth-error"></div>
+                <div class="auth-success" id="auth-success"></div>
+
+                <!-- Login form -->
+                <div id="auth-login-form">
+                    <div class="auth-field">
+                        <label class="auth-label">Email Address</label>
+                        <input type="email" id="login-email" class="auth-input" placeholder="you@example.com">
+                    </div>
+                    <div class="auth-field">
+                        <label class="auth-label">Password</label>
+                        <input type="password" id="login-password" class="auth-input" placeholder="••••••••">
+                    </div>
+                    <button class="auth-submit" id="login-submit-btn" onclick="doLogin()">
+                        <span id="login-label">Sign In to My Program</span>
+                        <div class="checkout-spinner" id="login-spinner" style="display:none;"></div>
+                    </button>
+                    <p style="text-align:center;margin-top:16px;font-size:0.75rem;color:#9ca3af;">
+                        <a href="#" onclick="switchAuthTab('forgot');return false;" style="color:var(--sage);text-decoration:underline;">Forgot your password?</a>
+                    </p>
+                </div>
+
+                <!-- Register form -->
+                <div id="auth-register-form" style="display:none;">
+                    <div style="background:#fff8ed;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:0.8rem;color:#92400e;line-height:1.5;">
+                        ⚠️ You must have purchased the program first. After payment, you'll receive an invitation email to set your password.
+                    </div>
+                    <div class="auth-field">
+                        <label class="auth-label">Email Address</label>
+                        <input type="email" id="register-email" class="auth-input" placeholder="you@example.com">
+                    </div>
+                    <div class="auth-field">
+                        <label class="auth-label">Password</label>
+                        <input type="password" id="register-password" class="auth-input" placeholder="Min. 6 characters">
+                    </div>
+                    <div class="auth-field">
+                        <label class="auth-label">Confirm Password</label>
+                        <input type="password" id="register-password2" class="auth-input" placeholder="Repeat password">
+                    </div>
+                    <button class="auth-submit" id="register-submit-btn" onclick="doRegister()">
+                        <span id="register-label">Create My Account</span>
+                        <div class="checkout-spinner" id="register-spinner" style="display:none;"></div>
+                    </button>
+                </div>
+
+                <!-- Forgot password form -->
+                <div id="auth-forgot-form" style="display:none;">
+                    <div class="auth-field">
+                        <label class="auth-label">Your Email Address</label>
+                        <input type="email" id="forgot-email" class="auth-input" placeholder="you@example.com">
+                    </div>
+                    <button class="auth-submit" id="forgot-submit-btn" onclick="doForgotPassword()">
+                        <span id="forgot-label">Send Reset Link</span>
+                        <div class="checkout-spinner" id="forgot-spinner" style="display:none;"></div>
+                    </button>
+                    <p style="text-align:center;margin-top:16px;font-size:0.75rem;color:#9ca3af;">
+                        <a href="#" onclick="switchAuthTab('login');return false;" style="color:var(--sage);text-decoration:underline;">← Back to sign in</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         CHECKOUT MODAL
+    ══════════════════════════════ -->
+    <div id="checkout-modal" style="display:none;" class="checkout-overlay">
+        <div class="checkout-bg" onclick="closeCheckout()"></div>
+        <div class="checkout-card">
+
+            <!-- Header -->
+            <div class="checkout-header">
+                <button class="checkout-close" onclick="closeCheckout()">✕</button>
+                <p class="checkout-badge">🔒 Secure Checkout · Thrifty30</p>
+                <h2 class="checkout-title">Complete your<br>purchase</h2>
+                <div class="checkout-price-tag">
+                    <span class="checkout-price-amount">$4.50</span>
+                    <span class="checkout-price-label">one-time · instant access</span>
+                </div>
+            </div>
+
+            <!-- Body: Form -->
+            <div class="checkout-body" id="checkout-form-body">
+
+                <div class="checkout-error-banner" id="checkout-error-banner"></div>
+
+                <div class="checkout-input-row">
+                    <div class="checkout-field">
+                        <label class="checkout-label">First Name</label>
+                        <input type="text" id="co-firstname" class="checkout-input" placeholder="John" maxlength="50">
+                        <div class="field-error" id="err-firstname">First name is required.</div>
+                    </div>
+                    <div class="checkout-field">
+                        <label class="checkout-label">Last Name</label>
+                        <input type="text" id="co-lastname" class="checkout-input" placeholder="Doe" maxlength="50">
+                        <div class="field-error" id="err-lastname">Last name is required.</div>
+                    </div>
+                </div>
+
+                <div class="checkout-field">
+                    <label class="checkout-label">Email Address</label>
+                    <input type="email" id="co-email" class="checkout-input" placeholder="you@example.com" maxlength="255">
+                    <div class="field-error" id="err-email">A valid email address is required.</div>
+                </div>
+
+                <div class="checkout-field">
+                    <label class="checkout-label">Choose a Password</label>
+                    <input type="password" id="co-password" class="checkout-input" placeholder="Min. 6 characters — to access your program later" maxlength="72">
+                    <div class="field-error" id="err-password">Password must be at least 6 characters.</div>
+                    <p style="font-size:0.7rem;color:#9ca3af;margin-top:6px;">🔒 You'll use this to log back in anytime after purchase.</p>
+                </div>
+
+                <div class="checkout-field">
+                    <label class="checkout-label">Phone Number</label>
+                    <div class="phone-row">
+                        <select id="co-country" class="checkout-select">
+                            <option value="US">🇺🇸 +1</option>
+                            <option value="FR">🇫🇷 +33</option>
+                            <option value="GB">🇬🇧 +44</option>
+                            <option value="CA">🇨🇦 +1</option>
+                            <option value="DE">🇩🇪 +49</option>
+                            <option value="ES">🇪🇸 +34</option>
+                            <option value="IT">🇮🇹 +39</option>
+                            <option value="BR">🇧🇷 +55</option>
+                            <option value="MX">🇲🇽 +52</option>
+                            <option value="SN">🇸🇳 +221</option>
+                            <option value="CI">🇨🇮 +225</option>
+                            <option value="CM">🇨🇲 +237</option>
+                            <option value="CG">🇨🇬 +242</option>
+                            <option value="CD">🇨🇩 +243</option>
+                            <option value="MA">🇲🇦 +212</option>
+                            <option value="DZ">🇩🇿 +213</option>
+                            <option value="TN">🇹🇳 +216</option>
+                            <option value="NG">🇳🇬 +234</option>
+                        </select>
+                        <input type="tel" id="co-phone" class="checkout-input" placeholder="612 345 678" maxlength="20">
+                    </div>
+                    <div class="field-error" id="err-phone">Phone number is required (digits only).</div>
+                </div>
+
+                <hr class="checkout-divider">
+
+                <button class="checkout-submit" id="checkout-submit-btn" onclick="submitCheckout()">
+                    <span id="submit-label">Pay $4.50 & Get Instant Access</span>
+                    <div class="checkout-spinner" id="checkout-spinner" style="display:none;"></div>
+                </button>
+
+                <p class="checkout-secure">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-width="2"/></svg>
+                    Secured by Chariow · SSL encrypted payment
+                </p>
+            </div>
+
+            <!-- Already purchased state -->
+            <div class="checkout-body checkout-already-owned" id="checkout-already-owned" style="display:none;">
+                <div class="emoji">🎉</div>
+                <h3>You already have access!</h3>
+                <p>It looks like you've already purchased Thrifty30. Click below to go directly to your program.</p>
+                <br>
+                <button class="checkout-submit" onclick="goToApp(); closeCheckout();" style="margin-top:8px;">
+                    Open My Program →
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PAGE 2: PROGRAM APP
+    ══════════════════════════════ -->
+    <div id="page-app" class="page">
+
+        <header class="app-header">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center gap-6 flex-wrap">
+                <button onclick="goToLanding()" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 bg-[#5f7a61] rounded-xl flex items-center justify-center text-white shadow-lg rotate-3 group-hover:rotate-0 transition-transform">
+                        <span class="serif-pd text-xl font-bold">T</span>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold tracking-tight text-stone-800">Thrifty<span class="text-[#5f7a61]">30</span></div>
+                        <div class="text-[8px] uppercase tracking-[0.3em] text-stone-400 font-black">Healthy Gastronomy</div>
+                    </div>
+                </button>
+                <div class="flex items-center gap-3">
+                    <button onclick="openResetModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-stone-200 text-stone-400 hover:border-red-200 hover:text-red-400 hover:bg-red-50 transition-all text-[10px] font-black uppercase tracking-wider" title="Reset program">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Reset
+                    </button>
+                    <div class="flex items-center gap-3 bg-white/80 pl-4 pr-2 py-1.5 rounded-full border border-stone-100 shadow-sm">
+                        <div class="text-right">
+                            <span class="block text-[8px] uppercase tracking-widest text-stone-400 font-black">Progress</span>
+                            <span id="progress-text" class="text-sm font-bold text-stone-700">0%</span>
+                        </div>
+                        <div class="relative w-10 h-10">
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <circle class="text-stone-100" stroke-width="3" stroke="currentColor" fill="none" cx="18" cy="18" r="16" />
+                                <circle id="progress-circle" class="text-[#5f7a61] progress-ring-circle" stroke-width="3" stroke-dasharray="100, 100" stroke-dashoffset="100" stroke-linecap="round" stroke="currentColor" fill="none" cx="18" cy="18" r="16" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="bg-stone-50/50 border-b border-stone-100 sticky top-[73px] z-40 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex gap-4 overflow-x-auto hide-scroll items-center">
+                <div id="day-nav-container" class="flex gap-3"></div>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto px-6 py-16">
+            <div id="active-day-content" class="space-y-20"></div>
+        </main>
+
+        <div id="cook-modal" class="fixed inset-0 z-[60] bg-white hidden overflow-y-auto">
+            <div class="max-w-5xl mx-auto px-6 py-12">
+                <button onclick="closeCookMode()" class="mb-10 text-stone-400 hover:text-stone-900 flex items-center gap-3 font-black uppercase text-[10px] tracking-[0.3em] transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5"/></svg>
+                    Back to program
+                </button>
+                <div id="modal-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESET MODAL -->
+    <div id="reset-modal" class="reset-overlay" style="display:none;">
+        <div class="reset-overlay-bg" onclick="closeResetModal()"></div>
+        <div class="reset-card">
+            <div class="reset-icon">🔄</div>
+            <h3 class="reset-title">Reset the program?</h3>
+            <p class="reset-desc">All your progress will be erased — <strong id="reset-days-count">0 day(s)</strong> completed will be reset to zero. This action cannot be undone.</p>
+            <div class="reset-actions">
+                <button class="btn-cancel" onclick="closeResetModal()">Cancel</button>
+                <button class="btn-reset-confirm" onclick="confirmReset()">Yes, start over</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span>✓</span> <span id="toast-msg">Program reset! Good luck on your 30 days 💪</span>
+    </div>
+
+    <script>
+        /* ── PAGE NAVIGATION ── */
+        function goToApp() {
+            if (!currentUser) {
+                // Not logged in — show login modal instead
+                openAuthModal('login');
+                return;
+            }
+            document.getElementById('page-landing').classList.remove('active');
+            document.getElementById('page-app').classList.add('active');
+            window.scrollTo(0, 0);
+            renderDay(currentDay || 1);
+            updateProgressBar();
+        }
+
+        function goToLanding() {
+            document.getElementById('page-app').classList.remove('active');
+            document.getElementById('page-landing').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        /* ── SCROLL & REVEAL ── */
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('lp-nav');
+            if (!nav) return;
+            if (window.scrollY > 80) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        /* ── RECIPE DATA (US measurements) ── */
+        const recipeImages = {
+            'b1': "https://images.unsplash.com/photo-1517673400267-0251440c45dc?auto=format&fit=crop&q=80&w=800",
+            'b2': "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&q=80&w=800",
+            'l1': "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800",
+            's1': "https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd?auto=format&fit=crop&q=80&w=800",
+            'd1': "https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&q=80&w=800",
+            'dr1': "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80&w=800",
+            'ds1': "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?auto=format&fit=crop&q=80&w=800"
+        };
+
+        const recipesPool = {
+            breakfast: [
+                {
+                    id: 'b1',
+                    name: "Almond Milk Bircher Muesli",
+                    ingredients: [
+                        { name: "Rolled oats", qty: "½ cup", note: "Use old-fashioned oats for the best texture" },
+                        { name: "Unsweetened almond milk", qty: "½ cup", note: "Or any plant-based milk" },
+                        { name: "Apple", qty: "1 small", note: "Grate with skin on for extra fiber" },
+                        { name: "Pumpkin seeds", qty: "1 tbsp", note: "Rich in zinc and magnesium" },
+                        { name: "Honey or maple syrup", qty: "1 tsp", note: "Optional, adjust to taste" },
+                        { name: "Lemon juice", qty: "A few drops", note: "Prevents the apple from browning" }
+                    ],
+                    steps: [
+                        { action: "Prepare the apple", detail: "Rinse the apple well. Grate it finely with its skin using a box grater. Drizzle with a few drops of lemon juice to prevent browning.", duration: "2 min" },
+                        { action: "Mix the base", detail: "In a bowl, combine the rolled oats and almond milk. Add the grated apple and honey or maple syrup if desired. Stir well to combine.", duration: "1 min" },
+                        { action: "Rest (ideally overnight)", detail: "Cover and rest for at least 10 minutes at room temperature, or refrigerate overnight for an even creamier, more tender texture.", duration: "10 min" },
+                        { action: "Finish & serve", detail: "Give it a stir and adjust consistency with a splash of milk if too thick. Scatter pumpkin seeds on top for crunch. Serve chilled.", duration: "1 min" }
+                    ],
+                    cost: 1.10, time: "5 min (+ rest)", nutrition: "High in Fiber",
+                    macros: { calories: 310, protein: "9g", carbs: "48g", fat: "8g", fiber: "6g" },
+                    benefits: ["Slow-release energy from oats keeps you full for hours", "Magnesium and zinc from pumpkin seeds support immunity", "Natural prebiotics to support gut health"],
+                    tips: "Prep 3 portions on Sunday night. Stays fresh in the fridge for up to 3 days.",
+                    variations: ["Swap apple for fresh raspberries or blueberries", "Stir in 1 tbsp almond butter for extra protein", "Chocolate version: add 1 tsp unsweetened cocoa powder"],
+                    tags: ["veg", "gf"]
+                },
+                {
+                    id: 'b2',
+                    name: "Avocado Toast with Poached Eggs",
+                    ingredients: [
+                        { name: "Organic eggs", qty: "2 large", note: "Bring to room temperature for best poaching" },
+                        { name: "Whole wheat sourdough bread", qty: "2 slices", note: "Sourdough improves digestibility" },
+                        { name: "Ripe avocado", qty: "½ medium", note: "Should yield slightly to gentle pressure" },
+                        { name: "Fresh chives", qty: "1 tbsp, chopped", note: "Or flat-leaf parsley" },
+                        { name: "Lemon", qty: "¼", note: "For the avocado and finishing" },
+                        { name: "Red pepper flakes", qty: "1 pinch", note: "Optional, for heat" },
+                        { name: "White vinegar", qty: "1 tbsp", note: "For poaching the eggs" }
+                    ],
+                    steps: [
+                        { action: "Prep the avocado", detail: "Scoop the avocado flesh into a bowl. Mash with lemon juice, salt, and pepper using a fork. Keep it rustic — chunky texture is ideal.", duration: "2 min" },
+                        { action: "Toast the bread", detail: "Toast the bread slices until golden brown and crisp. The resistance of a well-toasted slice is key to holding up the toppings.", duration: "3 min" },
+                        { action: "Poach the eggs", detail: "Bring a saucepan of water to a gentle simmer (not a rolling boil). Add the vinegar. Create a gentle swirl with a spoon. Crack each egg into a small cup first, then slide carefully into the water. Cook exactly 3 minutes for a runny yolk.", duration: "4 min" },
+                        { action: "Assemble", detail: "Spread the mashed avocado generously on each toast. Lift each poached egg with a slotted spoon and place on top. Sprinkle with chives, red pepper flakes, and flaky sea salt. Serve immediately.", duration: "1 min" }
+                    ],
+                    cost: 1.45, time: "10 min", nutrition: "Protein & Omega-3s",
+                    macros: { calories: 420, protein: "18g", carbs: "32g", fat: "24g", fiber: "8g" },
+                    benefits: ["Complete protein from eggs for lasting satiety", "Monounsaturated fats from avocado support heart health", "Low glycemic index thanks to sourdough fermentation"],
+                    tips: "The secret to a perfect poached egg: the water simmers, it does not boil. The vinegar helps the whites set faster.",
+                    variations: ["Swap eggs for marinated silken tofu for a vegan version", "Add a handful of arugula under the egg", "Fancy version: a few capers and fresh dill"],
+                    tags: ["veg"]
+                }
+            ],
+            lunch: [
+                {
+                    id: 'l1',
+                    name: "Quinoa & Roasted Sweet Potato Buddha Bowl",
+                    ingredients: [
+                        { name: "White quinoa", qty: "⅓ cup (dry)", note: "Rinse well before cooking to remove bitterness" },
+                        { name: "Sweet potato", qty: "5 oz", note: "About 1 small sweet potato" },
+                        { name: "Fresh spinach", qty: "A large handful", note: "Or mixed baby greens" },
+                        { name: "Canned chickpeas", qty: "½ cup (drained)", note: "Rinse and pat dry so they roast well" },
+                        { name: "Tahini (sesame paste)", qty: "2 tbsp", note: "A great source of calcium and healthy fats" },
+                        { name: "Lemon juice", qty: "2 tbsp" },
+                        { name: "Olive oil", qty: "1 tbsp" },
+                        { name: "Cumin, turmeric, paprika", qty: "½ tsp each", note: "For roasting spices" },
+                        { name: "Garlic powder", qty: "1 pinch", note: "For the tahini sauce" }
+                    ],
+                    steps: [
+                        { action: "Roast the vegetables", detail: "Preheat oven to 400°F. Peel and dice sweet potato into ¾-inch cubes. Spread on a baking sheet with the chickpeas. Drizzle with olive oil, sprinkle with cumin, turmeric, paprika, and salt. Roast 20–25 min, flipping halfway, until the potato is tender and slightly caramelized.", duration: "25 min" },
+                        { action: "Cook the quinoa", detail: "Rinse quinoa in a fine-mesh strainer under cold water. Cook in ½ cup (120ml) lightly salted water or broth. Cover, reduce heat, and simmer 12 minutes until all liquid is absorbed. Fluff with a fork.", duration: "15 min" },
+                        { action: "Make the tahini sauce", detail: "In a small bowl, whisk together tahini, lemon juice, 2 tbsp (30ml) warm water, and garlic powder until smooth and creamy. Add more water 1 tbsp at a time to loosen the consistency if needed.", duration: "2 min" },
+                        { action: "Build the bowl", detail: "Place quinoa as the base in a large bowl. Add fresh spinach to one side, then the roasted sweet potato and chickpeas. Drizzle generously with tahini sauce. Sprinkle with sesame seeds if available.", duration: "3 min" }
+                    ],
+                    cost: 1.90, time: "25 min", nutrition: "Vitamins & Energy",
+                    macros: { calories: 520, protein: "18g", carbs: "68g", fat: "16g", fiber: "12g" },
+                    benefits: ["Complete protein from quinoa + chickpea combination", "Beta-carotene from sweet potato (vitamin A)", "Plant-based iron from spinach, boosted by the vitamin C in lemon juice"],
+                    tips: "Cook a double batch of quinoa and chickpeas in the morning to cut dinner prep time in half.",
+                    variations: ["Swap sweet potato for butternut squash in winter", "Add cucumber and cherry tomatoes in summer", "Protein boost: add grilled tempeh slices"],
+                    tags: ["veg", "gf"]
+                }
+            ],
+            snack: [
+                {
+                    id: 's1',
+                    name: "Spinach & Banana Detox Green Smoothie",
+                    ingredients: [
+                        { name: "Ripe banana", qty: "1 medium", note: "The riper, the naturally sweeter" },
+                        { name: "Fresh spinach", qty: "1½ oz (about 2 big handfuls)", note: "The banana completely masks the flavor" },
+                        { name: "Oat milk", qty: "¾ cup + 1 tbsp", note: "Or coconut water for a lighter version (200ml total)" },
+                        { name: "Fresh ginger", qty: "½-inch piece", note: "A natural anti-inflammatory" },
+                        { name: "Lime juice", qty: "½ lime (~1 tbsp)", note: "Preserves the green color and adds brightness" },
+                        { name: "Ice cubes", qty: "4–5", note: "For a thick, cold texture" }
+                    ],
+                    steps: [
+                        { action: "Prep your ingredients", detail: "Peel the banana and break it into chunks. If you froze it the night before, even better — the smoothie will be thicker and icier. Peel the ginger with the edge of a spoon.", duration: "1 min" },
+                        { action: "Blend in the right order", detail: "Always add liquids first (oat milk, lime juice), then spinach, then banana and ginger, and ice cubes last. This order protects your blender blades.", duration: "30 sec" },
+                        { action: "Blend on high", detail: "Blend on full power for 60–90 seconds until completely smooth. If your blender is less powerful, start slow then increase speed. No spinach flecks should remain.", duration: "2 min" },
+                        { action: "Taste and adjust", detail: "Adjust to your liking: more lime for tartness, a drizzle of honey for sweetness, or extra ginger for a kick. Pour into a tall glass and enjoy immediately.", duration: "30 sec" }
+                    ],
+                    cost: 0.90, time: "3 min", nutrition: "Antioxidant & Energy",
+                    macros: { calories: 195, protein: "5g", carbs: "38g", fat: "2g", fiber: "5g" },
+                    benefits: ["Quick natural energy boost from banana's natural sugars", "Chlorophyll and iron from spinach for vitality", "Ginger is anti-inflammatory and aids digestion"],
+                    tips: "Freeze overripe bananas in chunks. They replace ice cubes and make the smoothie much creamier.",
+                    variations: ["Add 1 tbsp spirulina powder for a protein boost", "Swap spinach for kale (stronger flavor)", "Tropical version: add frozen mango chunks"],
+                    tags: ["veg", "gf"]
+                }
+            ],
+            dinner: [
+                {
+                    id: 'd1',
+                    name: "Pearl Barley Risotto with Mushrooms & Coconut",
+                    ingredients: [
+                        { name: "Pearl barley", qty: "½ cup (dry)", note: "Rich in beta-glucans, a beneficial soluble fiber" },
+                        { name: "White button mushrooms", qty: "5 oz", note: "Or a seasonal mushroom blend" },
+                        { name: "Vegetable broth", qty: "2 cups", note: "Warm, to be added gradually" },
+                        { name: "Light coconut milk", qty: "¼ cup", note: "For the final creamy texture" },
+                        { name: "Yellow onion", qty: "½ medium" },
+                        { name: "Garlic cloves", qty: "2", note: "Fresh preferred" },
+                        { name: "Fresh thyme", qty: "2 sprigs", note: "Or ½ tsp dried thyme" },
+                        { name: "Soy sauce", qty: "1 tbsp", note: "For umami depth" },
+                        { name: "Olive oil", qty: "1 tbsp" },
+                        { name: "Flat-leaf parsley", qty: "To garnish" }
+                    ],
+                    steps: [
+                        { action: "Sear the mushrooms", detail: "Clean mushrooms with a damp cloth (never soak them). Slice into strips. Sauté over high heat with a little oil for 5–6 minutes until deeply golden and their liquid has evaporated. Set aside.", duration: "7 min" },
+                        { action: "Build the aromatic base", detail: "In the same pot, sauté diced onion over medium heat for 3 minutes. Add minced garlic and thyme. Cook 1 minute more. The garlic should not brown.", duration: "5 min" },
+                        { action: "Cook risotto-style", detail: "Add the barley and toast it for 2 minutes, stirring. Add the soy sauce. Then add the warm broth one ladleful at a time, stirring regularly and waiting until each addition is absorbed before adding the next. This takes about 25–30 minutes.", duration: "30 min" },
+                        { action: "Finish & plate", detail: "When barley is al dente and creamy, stir in the reserved mushrooms and coconut milk. Stir vigorously for 2 minutes — the starch should create a silky texture. Adjust seasoning. Serve immediately in warm bowls, garnished with chopped parsley.", duration: "3 min" }
+                    ],
+                    cost: 1.60, time: "35 min", nutrition: "Digestion & Satiety",
+                    macros: { calories: 410, protein: "11g", carbs: "62g", fat: "10g", fiber: "9g" },
+                    benefits: ["Beta-glucans from barley help regulate blood sugar", "Mushrooms are rich in B vitamins and selenium", "Coconut milk provides medium-chain triglycerides for quick energy"],
+                    tips: "Never cover a risotto while it cooks. The constant stirring releases starch, which creates that creamy texture.",
+                    variations: ["Stir in fresh spinach at the very end", "Replace coconut milk with cashew cream", "Fall version: add a handful of roasted chestnuts"],
+                    tags: ["veg"]
+                }
+            ],
+            drink: [
+                {
+                    id: 'dr1',
+                    name: "Iced Hibiscus, Lime & Mint Cooler",
+                    ingredients: [
+                        { name: "Dried hibiscus flowers", qty: "2 tbsp", note: "Gives a beautiful deep ruby color" },
+                        { name: "Lime", qty: "1", note: "Zest and juice" },
+                        { name: "Filtered water", qty: "2 cups", note: "480ml total — hot for steeping, cold for iced version" },
+                        { name: "Fresh mint leaves", qty: "5–6 leaves", note: "Optional but very refreshing" },
+                        { name: "Agave syrup", qty: "1 tsp", note: "Optional, to taste" }
+                    ],
+                    steps: [
+                        { action: "Steep the hibiscus", detail: "Place the hibiscus flowers in a pitcher or large glass. Pour 2 cups (480ml) of hot water (about 175°F — just off the boil) over them. Steep for 8–10 minutes. The water should turn a deep, vivid red.", duration: "10 min" },
+                        { action: "Strain & chill", detail: "Strain through a fine-mesh sieve to remove the flowers. Let cool for 10 minutes at room temperature, then refrigerate for at least 30 minutes. For a quick version, skip the fridge and add plenty of ice cubes directly.", duration: "30 min" },
+                        { action: "Add the aromatics", detail: "Squeeze in the lime juice and add a few strips of lime zest for aroma. Stir in agave syrup if you'd like a touch of sweetness. Gently bruise the mint leaves between your palms to release their oils, then drop them in.", duration: "2 min" },
+                        { action: "Serve", detail: "Pour over a glass full of ice. Garnish with a lime wheel and a sprig of mint. This drink keeps for up to 2 days in the refrigerator.", duration: "1 min" }
+                    ],
+                    cost: 0.30, time: "12 min + chilling", nutrition: "Hydration & Antioxidants",
+                    macros: { calories: 18, protein: "0g", carbs: "4g", fat: "0g", fiber: "0g" },
+                    benefits: ["High in vitamin C and anthocyanins (powerful antioxidants)", "Naturally supports healthy blood pressure", "Caffeine-free and deeply hydrating"],
+                    tips: "Make a full pitcher in the morning so it's perfectly cold by lunchtime. The color deepens as it chills.",
+                    variations: ["Add cucumber slices for a spa-style drink", "Serve hot with a star anise pod in winter", "Blend with chilled green tea for a double antioxidant hit"],
+                    tags: ["veg", "gf"]
+                }
+            ],
+            dessert: [
+                {
+                    id: 'ds1',
+                    name: "Aquafaba Dark Chocolate Mousse",
+                    ingredients: [
+                        { name: "Chickpea brine (aquafaba)", qty: "½ cup (1 can)", note: "Must be cold and unsalted to whip properly" },
+                        { name: "70% dark chocolate", qty: "3 oz", note: "Higher cocoa = more magnesium" },
+                        { name: "Stevia or coconut sugar", qty: "1–2 tsp", note: "Adjust to how bitter you like it" },
+                        { name: "Vanilla extract", qty: "½ tsp", note: "Enhances the chocolate flavor" },
+                        { name: "Pinch of salt", qty: "1 pinch", note: "Salt amplifies chocolate flavor" }
+                    ],
+                    steps: [
+                        { action: "Melt the chocolate", detail: "Break chocolate into pieces in a heatproof bowl. Melt over a double boiler, stirring gently, or in the microwave in 30-second bursts. Do not exceed 120°F. Let it cool to room temperature — this is crucial. Hot chocolate will deflate the mousse.", duration: "5 min" },
+                        { action: "Whip the aquafaba", detail: "Pour the cold chickpea brine into a spotlessly clean and dry bowl. Beat with an electric hand mixer on high for 3–4 minutes until stiff, glossy peaks form. Add stevia and vanilla halfway through whipping.", duration: "5 min" },
+                        { action: "Fold in the chocolate", detail: "Stir ⅓ of the whipped aquafaba into the cooled chocolate to loosen it. Then add the remaining whipped mixture in two additions, using a silicone spatula with broad, gentle folding motions from the bottom up. Work swiftly but delicately.", duration: "3 min" },
+                        { action: "Chill & serve", detail: "Divide the mousse between 2 ramekins or glasses. Refrigerate for a minimum of 2 hours — overnight is best. The mousse will firm up and the flavor deepens. Finish with a dusting of cocoa powder or dark chocolate shavings before serving.", duration: "2h rest" }
+                    ],
+                    cost: 0.80, time: "15 min + 2h chilling", nutrition: "Guilt-Free Indulgence",
+                    macros: { calories: 165, protein: "4g", carbs: "14g", fat: "9g", fiber: "3g" },
+                    benefits: ["Rich in magnesium from dark chocolate (natural stress reliever)", "Completely dairy-free and egg-free — vegan and light", "Powerful antioxidants from cacao (flavonoids)"],
+                    tips: "The key: aquafaba must be cold and the melted chocolate must be at room temperature — not hot — when you combine them.",
+                    variations: ["Add orange zest for a chocolate-orange version", "Top with flaky sea salt and toasted hazelnuts", "A few drops of peppermint extract for a mint-chocolate twist"],
+                    tags: ["veg", "gf"]
+                }
+            ]
+        };
+
+        let currentDay = 1;
+        let progress = JSON.parse(localStorage.getItem('thrifty30_en_v1')) || {};
+
+        const programData = Array.from({ length: 30 }, (_, i) => {
+            const dayNum = i + 1;
+            const getR = (arr) => arr[dayNum % arr.length];
+            const menu = {
+                breakfast: getR(recipesPool.breakfast),
+                lunch: getR(recipesPool.lunch),
+                snack: getR(recipesPool.snack),
+                dinner: getR(recipesPool.dinner),
+                drink: getR(recipesPool.drink),
+                dessert: getR(recipesPool.dessert)
+            };
+            const totalCost = Object.values(menu).reduce((sum, r) => sum + r.cost, 0);
+            return { day: dayNum, menu, totalCost: totalCost.toFixed(2) };
+        });
+
+        function renderDayNav() {
+            const container = document.getElementById('day-nav-container');
+            if (!container) return;
+            container.innerHTML = '';
+            for (let i = 1; i <= 30; i++) {
+                const btn = document.createElement('button');
+                btn.className = `w-14 h-14 rounded-2xl flex-shrink-0 flex flex-col items-center justify-center transition-all duration-500 font-bold border-2 ${currentDay === i ? 'nav-button-active border-[#5f7a61]' : (progress[i] ? 'bg-emerald-50 text-[#5f7a61] border-emerald-100' : 'bg-white text-stone-300 border-stone-50 hover:border-stone-200')}`;
+                btn.innerHTML = `<span class="text-[9px] opacity-60">D</span><span class="text-base">${i}</span>`;
+                btn.onclick = () => renderDay(i);
+                container.appendChild(btn);
+            }
+        }
+
+        function renderDay(dayNum) {
+            currentDay = dayNum;
+            const data = programData[dayNum - 1];
+            const contentDiv = document.getElementById('active-day-content');
+            if (!contentDiv) return;
+            renderDayNav();
+
+            const mealLabels = { breakfast: 'Breakfast', lunch: 'Lunch', snack: 'Snack', dinner: 'Dinner', drink: 'Drink', dessert: 'Dessert' };
+            const mealIcons = { breakfast: '☀️', lunch: '🥗', snack: '🍃', dinner: '🌙', drink: '🫖', dessert: '🍫' };
+
+            let html = `
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <span class="bg-[#d4a373] text-white text-[9px] font-black px-4 py-1.5 rounded-lg uppercase tracking-[0.2em]">Day ${dayNum}/30</span>
+                            <span class="text-stone-300 font-light">|</span>
+                            <span class="text-stone-400 text-xs font-semibold tracking-wider uppercase">Full Day Menu</span>
+                        </div>
+                        <h2 class="text-5xl serif-pd text-stone-900 leading-tight">Today's Program</h2>
+                        <p class="text-stone-400 text-lg">Day total: <span class="serif-pd italic text-stone-800 underline decoration-[#d4a373] decoration-2 underline-offset-8">$${data.totalCost}</span></p>
+                    </div>
+                    <button onclick="toggleDayDone(${dayNum})" class="px-10 py-4 rounded-2xl border-2 transition-all font-black text-[10px] uppercase tracking-[0.2em] ${progress[dayNum] ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-white border-stone-200 text-stone-400 hover:border-stone-900 hover:text-stone-900'}">
+                        ${progress[dayNum] ? '✓ Day Completed' : 'Mark as Complete'}
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            `;
+
+            Object.entries(data.menu).forEach(([type, recipe], idx) => {
+                const imageUrl = recipeImages[recipe.id];
+                html += `
+                    <div class="meal-transition meal-card glass-card rounded-[2.5rem] overflow-hidden group hover:shadow-2xl transition-all duration-700" style="animation-delay: ${idx * 0.1}s">
+                        <div class="relative overflow-hidden h-[240px]">
+                            <img src="${imageUrl}" alt="${recipe.name}" class="meal-card-img w-full h-full" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800'">
+                            <div class="absolute inset-0 img-overlay"></div>
+                            <div class="absolute bottom-6 left-8 right-8">
+                                <span class="text-[9px] font-black uppercase tracking-[0.3em] text-[#d4a373] bg-white/95 px-4 py-1.5 rounded-lg inline-block mb-3 shadow-sm">${mealIcons[type]} ${mealLabels[type]}</span>
+                                <h3 class="text-2xl serif-pd text-white leading-tight">${recipe.name}</h3>
+                            </div>
+                        </div>
+                        <div class="p-8 space-y-5">
+                            <div class="flex items-center justify-between text-[10px] font-black text-stone-400 border-b border-stone-100 pb-5">
+                                <span class="flex items-center gap-2"><svg class="w-4 h-4 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3" stroke-width="2"/></svg>${recipe.time}</span>
+                                <span class="serif-pd italic text-stone-600 text-base">$${recipe.cost.toFixed(2)}</span>
+                            </div>
+                            ${recipe.macros ? `
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-stone-50 rounded-xl p-2"><div class="serif-pd text-lg font-bold text-stone-700">${recipe.macros.calories}</div><div class="text-[9px] uppercase tracking-wider text-stone-400 font-black">kcal</div></div>
+                                <div class="bg-stone-50 rounded-xl p-2"><div class="serif-pd text-lg font-bold text-stone-700">${recipe.macros.protein}</div><div class="text-[9px] uppercase tracking-wider text-stone-400 font-black">protein</div></div>
+                                <div class="bg-stone-50 rounded-xl p-2"><div class="serif-pd text-lg font-bold text-stone-700">${recipe.macros.fiber}</div><div class="text-[9px] uppercase tracking-wider text-stone-400 font-black">fiber</div></div>
+                            </div>` : ''}
+                            <p class="text-stone-500 text-sm leading-relaxed">${recipe.ingredients.slice(0,3).map(i => i.name).join(', ')}...</p>
+                            <div class="flex items-center justify-between pt-1">
+                                <div class="flex gap-1.5 flex-wrap">${(recipe.tags || []).map(tag => `<span class="badge-tag ${tag === 'veg' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}">${tag}</span>`).join('')}</div>
+                                <button onclick="openCookMode('${type}', ${dayNum-1})" class="w-12 h-12 rounded-full bg-stone-900 text-white flex items-center justify-center hover:bg-[#5f7a61] transition-all transform hover:-translate-y-1 shadow-lg flex-shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7-7 7M3 12h18" stroke-width="2.5"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            contentDiv.innerHTML = html;
+        }
+
+        function openCookMode(type, dayIdx) {
+            const recipe = programData[dayIdx].menu[type];
+            const modal = document.getElementById('cook-modal');
+            const content = document.getElementById('modal-content');
+            const imageUrl = recipeImages[recipe.id];
+            const mealLabels = { breakfast: 'Breakfast', lunch: 'Lunch', snack: 'Snack', dinner: 'Dinner', drink: 'Drink', dessert: 'Dessert' };
+
+            content.innerHTML = `
+                <div class="grid lg:grid-cols-5 gap-12 items-start mb-14">
+                    <div class="lg:col-span-2 rounded-[2rem] overflow-hidden shadow-2xl aspect-square">
+                        <img src="${imageUrl}" class="w-full h-full object-cover" alt="${recipe.name}" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800'">
+                    </div>
+                    <div class="lg:col-span-3 space-y-6">
+                        <div>
+                            <span class="inline-block bg-[#d4a373] text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">${mealLabels[type]}</span>
+                            <h2 class="text-5xl serif-pd text-stone-900 leading-tight mb-3">${recipe.name}</h2>
+                            <p class="text-stone-400 text-sm font-medium uppercase tracking-wider">${recipe.nutrition}</p>
+                        </div>
+                        <div class="flex gap-6 py-6 border-y border-stone-100 flex-wrap">
+                            <div><div class="text-[9px] uppercase tracking-widest text-stone-400 font-black mb-1">Time</div><div class="font-semibold text-stone-700">${recipe.time}</div></div>
+                            <div><div class="text-[9px] uppercase tracking-widest text-stone-400 font-black mb-1">Cost</div><div class="serif-pd italic text-stone-700 text-lg">$${recipe.cost.toFixed(2)}</div></div>
+                            <div><div class="text-[9px] uppercase tracking-widest text-stone-400 font-black mb-1">Calories</div><div class="font-semibold text-stone-700">${recipe.macros ? recipe.macros.calories + ' kcal' : '—'}</div></div>
+                            <div><div class="text-[9px] uppercase tracking-widest text-stone-400 font-black mb-1">Steps</div><div class="font-semibold text-stone-700">${recipe.steps.length} steps</div></div>
+                        </div>
+                        ${recipe.macros ? `
+                        <div>
+                            <p class="text-[9px] uppercase tracking-widest text-stone-400 font-black mb-4">Macronutrients</p>
+                            <div class="flex gap-3">
+                                <div class="macro-pill"><div class="macro-val">${recipe.macros.protein}</div><div class="macro-label">Protein</div></div>
+                                <div class="macro-pill"><div class="macro-val">${recipe.macros.carbs}</div><div class="macro-label">Carbs</div></div>
+                                <div class="macro-pill"><div class="macro-val">${recipe.macros.fat}</div><div class="macro-label">Fat</div></div>
+                                <div class="macro-pill"><div class="macro-val">${recipe.macros.fiber}</div><div class="macro-label">Fiber</div></div>
+                            </div>
+                        </div>` : ''}
+                    </div>
+                </div>
+                <div class="flex gap-3 mb-10 flex-wrap">
+                    <button class="modal-tab active" onclick="switchTab('preparation', this)">👨‍🍳 Preparation</button>
+                    <button class="modal-tab" onclick="switchTab('ingredients', this)">🛒 Ingredients</button>
+                    <button class="modal-tab" onclick="switchTab('nutrition', this)">💚 Nutrition</button>
+                    <button class="modal-tab" onclick="switchTab('variations', this)">✨ Variations</button>
+                </div>
+                <div id="tab-preparation" class="tab-content active space-y-6">
+                    ${recipe.steps.map((step, i) => `
+                        <div class="bg-stone-50 rounded-[1.5rem] p-8 border border-stone-100 hover:border-stone-200 transition-all">
+                            <div class="flex gap-6">
+                                <div class="step-bubble">${i + 1}</div>
+                                <div class="flex-1">
+                                    <h4 class="font-black text-stone-800 text-base mb-3">${step.action}</h4>
+                                    <p class="text-stone-600 leading-relaxed text-sm">${step.detail}</p>
+                                    ${step.duration ? `<span class="step-duration">⏱ ${step.duration}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${recipe.tips ? `<div class="tip-card mt-8"><span class="text-2xl">💡</span><div><p class="font-black text-emerald-800 text-xs uppercase tracking-wider mb-2">Chef's tip</p><p class="text-emerald-700 text-sm leading-relaxed">${recipe.tips}</p></div></div>` : ''}
+                </div>
+                <div id="tab-ingredients" class="tab-content space-y-4">
+                    <p class="text-stone-400 text-xs uppercase tracking-widest font-black mb-6">Check off ingredients as you go</p>
+                    ${recipe.ingredients.map((ing, i) => `
+                        <label class="ingredient-row" id="ing-${i}" onclick="toggleIngredient('ing-${i}')">
+                            <input type="checkbox" onclick="event.stopPropagation(); toggleIngredient('ing-${i}')">
+                            <div class="flex-1"><div class="font-semibold text-stone-700 text-sm">${ing.name}</div>${ing.note ? `<div class="text-stone-400 text-xs mt-0.5">${ing.note}</div>` : ''}</div>
+                            <span class="text-stone-500 font-mono text-sm font-bold flex-shrink-0">${ing.qty}</span>
+                        </label>
+                    `).join('')}
+                </div>
+                <div id="tab-nutrition" class="tab-content space-y-8">
+                    ${recipe.benefits ? `
+                    <div>
+                        <h4 class="font-black text-stone-800 mb-6 uppercase text-xs tracking-widest">Why this meal is good for you</h4>
+                        <div class="space-y-4">${recipe.benefits.map(b => `<div class="flex gap-4 items-start bg-emerald-50 p-5 rounded-2xl"><span class="text-emerald-500 text-lg mt-0.5">✓</span><p class="text-stone-700 text-sm leading-relaxed">${b}</p></div>`).join('')}</div>
+                    </div>` : ''}
+                    ${recipe.macros ? `
+                    <div>
+                        <h4 class="font-black text-stone-800 mb-6 uppercase text-xs tracking-widest">Macronutrient breakdown</h4>
+                        <div class="space-y-4">
+                            ${[{ label:'Protein',val:recipe.macros.protein,pct:60},{label:'Carbs',val:recipe.macros.carbs,pct:85},{label:'Fat',val:recipe.macros.fat,pct:40},{label:'Fiber',val:recipe.macros.fiber,pct:55}].map(m=>`<div><div class="flex justify-between mb-2"><span class="text-sm font-semibold text-stone-700">${m.label}</span><span class="text-sm text-stone-400 font-mono">${m.val}</span></div><div class="nutrition-bar"><div class="nutrition-bar-fill" style="width:${m.pct}%"></div></div></div>`).join('')}
+                        </div>
+                    </div>` : ''}
+                </div>
+                <div id="tab-variations" class="tab-content">
+                    ${recipe.variations ? `<h4 class="font-black text-stone-800 mb-6 uppercase text-xs tracking-widest">Want to switch things up?</h4><div class="flex flex-wrap gap-3 mb-10">${recipe.variations.map(v=>`<span class="variation-chip">🔄 ${v}</span>`).join('')}</div>` : ''}
+                    <div class="bg-amber-50 border border-amber-100 rounded-2xl p-8">
+                        <p class="text-xs font-black uppercase tracking-widest text-amber-700 mb-3">Storage</p>
+                        <p class="text-amber-800 text-sm leading-relaxed">Prepped ingredients generally keep for 2–3 days in the refrigerator in an airtight container. Sauces and grains can be made in larger batches and stored separately.</p>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function switchTab(tabName, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function toggleIngredient(id) {
+            const row = document.getElementById(id);
+            const cb = row.querySelector('input[type="checkbox"]');
+            cb.checked = !cb.checked;
+            row.classList.toggle('checked', cb.checked);
+        }
+
+        function closeCookMode() {
+            document.getElementById('cook-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleDayDone(dayNum) {
+            progress[dayNum] = !progress[dayNum];
+            localStorage.setItem('thrifty30_en_v1', JSON.stringify(progress));
+            updateProgressBar();
+            renderDay(dayNum);
+        }
+
+        function updateProgressBar() {
+            const completed = Object.values(progress).filter(v => v).length;
+            const percent = Math.round((completed / 30) * 100);
+            const textEl = document.getElementById('progress-text');
+            const circleEl = document.getElementById('progress-circle');
+            if (textEl) textEl.innerText = `${percent}%`;
+            if (circleEl) circleEl.style.strokeDashoffset = 100 - percent;
+        }
+
+        /* ── RESET ── */
+        function openResetModal() {
+            const completed = Object.values(progress).filter(v => v).length;
+            const label = `${completed} day${completed !== 1 ? 's' : ''} completed`;
+            document.getElementById('reset-days-count').textContent = label;
+            document.getElementById('reset-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResetModal() {
+            document.getElementById('reset-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmReset() {
+            progress = {};
+            localStorage.removeItem('thrifty30_en_v1');
+            closeResetModal();
+            currentDay = 1;
+            updateProgressBar();
+            renderDay(1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast('Program reset! Good luck on your 30 days 💪');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        /* ══════════════════════════════════
+           SUPABASE AUTH
+        ══════════════════════════════════ */
+        const { createClient } = supabase;
+        const sb = createClient(
+            'https://zftxqnivquvlhjkoxwut.supabase.co',
+            'sb_publishable_auP6JtK24RS_W-TMIn36Yw_5SDPyvdO'
+        );
+
+        let currentUser = null;
+
+        // ── Initialise auth state on load ──
+        sb.auth.onAuthStateChange(async (event, session) => {
+            currentUser = session?.user || null;
+            updateNavAuth();
+            if (currentUser) {
+                // If user is logged in and on landing page, show "My Program" button
+                // Auto-open app if returning from email confirmation
+                if (event === 'SIGNED_IN' && window.location.hash.includes('access_token')) {
+                    history.replaceState({}, '', window.location.pathname);
+                    goToApp();
+                }
+            }
+        });
+
+        function updateNavAuth() {
+            const out = document.getElementById('nav-loggedout');
+            const inn = document.getElementById('nav-loggedin');
+            if (!out || !inn) return;
+            if (currentUser) {
+                out.style.display = 'none';
+                inn.style.display = 'flex';
+                const email = currentUser.email || '';
+                document.getElementById('nav-user-email').textContent = email;
+                document.getElementById('nav-avatar-letter').textContent = email.charAt(0).toUpperCase();
+            } else {
+                out.style.display = 'flex';
+                inn.style.display = 'none';
+            }
+        }
+
+        async function signOut() {
+            await sb.auth.signOut();
+            currentUser = null;
+            updateNavAuth();
+            goToLanding();
+            showToast('You have been signed out.');
+        }
+
+        /* ── AUTH MODAL ── */
+        function openAuthModal(tab = 'login') {
+            document.getElementById('auth-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            switchAuthTab(tab);
+            clearAuthState();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function clearAuthState() {
+            document.getElementById('auth-error').classList.remove('show');
+            document.getElementById('auth-success').classList.remove('show');
+            document.querySelectorAll('.auth-input').forEach(i => { i.value = ''; i.classList.remove('error'); });
+        }
+
+        function switchAuthTab(tab) {
+            // hide all forms
+            document.getElementById('auth-login-form').style.display    = 'none';
+            document.getElementById('auth-register-form').style.display = 'none';
+            document.getElementById('auth-forgot-form').style.display   = 'none';
+            document.getElementById('auth-error').classList.remove('show');
+            document.getElementById('auth-success').classList.remove('show');
+
+            const loginBtn    = document.getElementById('tab-login-btn');
+            const registerBtn = document.getElementById('tab-register-btn');
+            loginBtn.classList.remove('active');
+            registerBtn.classList.remove('active');
+
+            if (tab === 'login') {
+                document.getElementById('auth-login-form').style.display = 'block';
+                document.getElementById('auth-modal-title').textContent   = 'Welcome back';
+                document.getElementById('auth-modal-sub').textContent     = 'Sign in to access your program';
+                loginBtn.classList.add('active');
+            } else if (tab === 'register') {
+                document.getElementById('auth-register-form').style.display = 'block';
+                document.getElementById('auth-modal-title').textContent      = 'Create your account';
+                document.getElementById('auth-modal-sub').textContent        = 'Join Thrifty30 after your purchase';
+                registerBtn.classList.add('active');
+            } else if (tab === 'forgot') {
+                document.getElementById('auth-forgot-form').style.display = 'block';
+                document.getElementById('auth-modal-title').textContent    = 'Reset password';
+                document.getElementById('auth-modal-sub').textContent      = 'We\'ll send you a reset link';
+            }
+        }
+
+        function showAuthError(msg) {
+            const el = document.getElementById('auth-error');
+            el.textContent = msg;
+            el.classList.add('show');
+            document.getElementById('auth-success').classList.remove('show');
+        }
+
+        function showAuthSuccess(msg) {
+            const el = document.getElementById('auth-success');
+            el.innerHTML = msg;
+            el.classList.add('show');
+            document.getElementById('auth-error').classList.remove('show');
+        }
+
+        function setAuthLoading(btnId, spinnerId, labelId, loading) {
+            document.getElementById(btnId).disabled = loading;
+            document.getElementById(spinnerId).style.display = loading ? 'block' : 'none';
+            document.getElementById(labelId).style.display   = loading ? 'none'  : 'inline';
+        }
+
+        async function doLogin() {
+            const email    = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) { showAuthError('Please fill in all fields.'); return; }
+
+            setAuthLoading('login-submit-btn', 'login-spinner', 'login-label', true);
+
+            const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+            setAuthLoading('login-submit-btn', 'login-spinner', 'login-label', false);
+
+            if (error) {
+                if (error.message.includes('Invalid login')) {
+                    showAuthError('Incorrect email or password. Please try again.');
+                } else if (error.message.includes('Email not confirmed')) {
+                    showAuthError('Please confirm your email address first. Check your inbox.');
+                } else {
+                    showAuthError(error.message);
+                }
+                return;
+            }
+
+            currentUser = data.user;
+            updateNavAuth();
+            closeAuthModal();
+            showToast('Welcome back! Opening your program... 🌿');
+            setTimeout(() => goToApp(), 800);
+        }
+
+        async function doRegister() {
+            const email  = document.getElementById('register-email').value.trim();
+            const pass1  = document.getElementById('register-password').value;
+            const pass2  = document.getElementById('register-password2').value;
+
+            if (!email || !pass1 || !pass2) { showAuthError('Please fill in all fields.'); return; }
+            if (pass1.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
+            if (pass1 !== pass2)  { showAuthError('Passwords do not match.'); return; }
+
+            setAuthLoading('register-submit-btn', 'register-spinner', 'register-label', true);
+
+            const { data, error } = await sb.auth.signUp({
+                email,
+                password: pass1,
+                options: {
+                    emailRedirectTo: window.location.href
+                }
+            });
+
+            setAuthLoading('register-submit-btn', 'register-spinner', 'register-label', false);
+
+            if (error) {
+                if (error.message.includes('already registered')) {
+                    showAuthError('This email is already registered. Please sign in instead.');
+                } else {
+                    showAuthError(error.message);
+                }
+                return;
+            }
+
+            showAuthSuccess('✅ Account created!<br>Check your inbox and click the confirmation link to activate your account.<br><br><small style="color:#16a34a;opacity:0.7;">Don\'t forget to check your spam folder.</small>');
+        }
+
+        async function doForgotPassword() {
+            const email = document.getElementById('forgot-email').value.trim();
+            if (!email) { showAuthError('Please enter your email address.'); return; }
+
+            setAuthLoading('forgot-submit-btn', 'forgot-spinner', 'forgot-label', true);
+
+            const { error } = await sb.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.href + '?reset=1'
+            });
+
+            setAuthLoading('forgot-submit-btn', 'forgot-spinner', 'forgot-label', false);
+
+            if (error) { showAuthError(error.message); return; }
+
+            showAuthSuccess('📧 Reset link sent!<br>Check your inbox. The link expires in 1 hour.');
+        }
+
+        /* ══════════════════════════════════
+           FAQ
+        ══════════════════════════════════ */
+        function toggleFaq(btn) {
+            const item = btn.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+            // Close all
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+            // Open clicked if it was closed
+            if (!isOpen) item.classList.add('open');
+        }
+
+        /* ══════════════════════════════════
+           CONTACT FORM
+        ══════════════════════════════════ */
+        async function submitContact() {
+            const name    = document.getElementById('ct-name').value.trim();
+            const email   = document.getElementById('ct-email').value.trim();
+            const subject = document.getElementById('ct-subject').value.trim();
+            const message = document.getElementById('ct-message').value.trim();
+
+            if (!name || !email || !message) {
+                alert('Please fill in your name, email and message.');
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Disable button + show spinner
+            document.getElementById('ct-submit').disabled = true;
+            document.getElementById('ct-label').style.display = 'none';
+            document.getElementById('ct-spinner').style.display = 'block';
+
+            // Send via mailto (opens email client as fallback)
+            // For a real backend, replace this with a fetch() to your email API
+            const mailtoLink = `mailto:thriftyprogramme@gmail.com?subject=${encodeURIComponent('[Thrifty30] ' + (subject || 'Contact from ' + name))}&body=${encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + message)}`;
+
+            // Simulate brief loading
+            await new Promise(r => setTimeout(r, 800));
+
+            window.location.href = mailtoLink;
+
+            // Reset form
+            document.getElementById('ct-submit').disabled = false;
+            document.getElementById('ct-label').style.display = 'inline';
+            document.getElementById('ct-spinner').style.display = 'none';
+            document.getElementById('ct-success').classList.add('show');
+            document.getElementById('ct-name').value = '';
+            document.getElementById('ct-email').value = '';
+            document.getElementById('ct-subject').value = '';
+            document.getElementById('ct-message').value = '';
+        }
+
+        /* ══════════════════════════════════
+           CHARIOW CHECKOUT INTEGRATION
+        ══════════════════════════════════ */
+        const CHARIOW_API_KEY  = 'sk_g0auxxmp_1de6e3d79353a56111bcef32acd6445b';
+        const CHARIOW_PRODUCT  = 'prd_3wja35';
+        const CHARIOW_ENDPOINT = 'https://api.chariow.com/v1/checkout';
+
+        function openCheckout() {
+            document.getElementById('checkout-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            // Reset state
+            document.getElementById('checkout-form-body').style.display = 'block';
+            document.getElementById('checkout-already-owned').style.display = 'none';
+            clearErrors();
+            hideBanner();
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.field-error').forEach(e => e.classList.remove('show'));
+            document.querySelectorAll('.checkout-input').forEach(e => e.classList.remove('error'));
+        }
+
+        function showBanner(msg) {
+            const b = document.getElementById('checkout-error-banner');
+            b.textContent = msg;
+            b.classList.add('show');
+        }
+
+        function hideBanner() {
+            document.getElementById('checkout-error-banner').classList.remove('show');
+        }
+
+        function setLoading(loading) {
+            const btn    = document.getElementById('checkout-submit-btn');
+            const label  = document.getElementById('submit-label');
+            const spinner = document.getElementById('checkout-spinner');
+            btn.disabled = loading;
+            label.style.display  = loading ? 'none'   : 'inline';
+            spinner.style.display = loading ? 'block' : 'none';
+        }
+
+        function validateForm() {
+            clearErrors();
+            hideBanner();
+            let valid = true;
+
+            const firstname = document.getElementById('co-firstname').value.trim();
+            const lastname  = document.getElementById('co-lastname').value.trim();
+            const email     = document.getElementById('co-email').value.trim();
+            const phone     = document.getElementById('co-phone').value.trim();
+
+            if (!firstname) {
+                document.getElementById('err-firstname').classList.add('show');
+                document.getElementById('co-firstname').classList.add('error');
+                valid = false;
+            }
+            if (!lastname) {
+                document.getElementById('err-lastname').classList.add('show');
+                document.getElementById('co-lastname').classList.add('error');
+                valid = false;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                document.getElementById('err-email').classList.add('show');
+                document.getElementById('co-email').classList.add('error');
+                valid = false;
+            }
+            const phoneClean = phone.replace(/\D/g, '');
+            if (!phoneClean || phoneClean.length < 6) {
+                document.getElementById('err-phone').classList.add('show');
+                document.getElementById('co-phone').classList.add('error');
+                valid = false;
+            }
+            const password = document.getElementById('co-password').value;
+            if (!password || password.length < 6) {
+                document.getElementById('err-password').classList.add('show');
+                document.getElementById('co-password').classList.add('error');
+                valid = false;
+            }
+            return valid;
+        }
+
+        async function submitCheckout() {
+            if (!validateForm()) return;
+
+            setLoading(true);
+
+            const firstname   = document.getElementById('co-firstname').value.trim();
+            const lastname    = document.getElementById('co-lastname').value.trim();
+            const email       = document.getElementById('co-email').value.trim();
+            const password    = document.getElementById('co-password').value;
+            const countryCode = document.getElementById('co-country').value;
+            const phoneRaw    = document.getElementById('co-phone').value.trim();
+            const phoneClean  = phoneRaw.replace(/\D/g, '');
+
+            const SITE_URL = 'https://cooki-ai.github.io/thrifty30/';
+
+            const payload = {
+                product_id:   CHARIOW_PRODUCT,
+                email:        email,
+                first_name:   firstname,
+                last_name:    lastname,
+                phone: {
+                    number:       phoneClean,
+                    country_code: countryCode
+                },
+                redirect_url: SITE_URL
+            };
+
+            try {
+                const response = await fetch(CHARIOW_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${CHARIOW_API_KEY}`,
+                        'Content-Type':  'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    // Handle validation errors from Chariow
+                    if (result.errors) {
+                        const firstError = Object.values(result.errors)[0];
+                        showBanner(Array.isArray(firstError) ? firstError[0] : firstError);
+                    } else {
+                        showBanner(result.message || 'Something went wrong. Please try again.');
+                    }
+                    setLoading(false);
+                    return;
+                }
+
+                const step = result?.data?.step;
+
+                switch (step) {
+                    case 'payment':
+                        // Create Supabase account with user's chosen password BEFORE redirecting to payment
+                        try {
+                            const { error: signUpError } = await sb.auth.signUp({
+                                email,
+                                password,
+                                options: {
+                                    data: { first_name: firstname, last_name: lastname }
+                                }
+                            });
+                            if (signUpError && !signUpError.message.includes('already registered')) {
+                                console.warn('Supabase signup warning:', signUpError.message);
+                            }
+                        } catch(e) { /* Account may already exist — no problem */ }
+
+                        // Store credentials temporarily for auto-login when user returns from Chariow
+                        // (sessionStorage is cleared when tab closes — safer than localStorage for passwords)
+                        sessionStorage.setItem('thrifty30_autologin', JSON.stringify({ email, password }));
+
+                        // Redirect to Chariow secure payment page
+                        window.location.href = result.data.payment.checkout_url;
+                        break;
+
+                    case 'completed':
+                        // Sign in automatically then open program
+                        try {
+                            const { data: loginData } = await sb.auth.signInWithPassword({ email, password });
+                            if (loginData?.user) { currentUser = loginData.user; updateNavAuth(); }
+                        } catch(e) {}
+                        closeCheckout();
+                        goToApp();
+                        break;
+
+                    case 'already_purchased':
+                        // Sign in automatically then show already-owned message
+                        try {
+                            const { data: loginData2 } = await sb.auth.signInWithPassword({ email, password });
+                            if (loginData2?.user) { currentUser = loginData2.user; updateNavAuth(); }
+                        } catch(e) {}
+                        document.getElementById('checkout-form-body').style.display = 'none';
+                        document.getElementById('checkout-already-owned').style.display = 'block';
+                        setLoading(false);
+                        break;
+
+                    default:
+                        showBanner('Unexpected response from payment server. Please try again.');
+                        setLoading(false);
+                }
+
+            } catch (err) {
+                console.error('Checkout error:', err);
+                showBanner('Network error — please check your connection and try again.');
+                setLoading(false);
+            }
+        }
+
+        // Init auth state check on load + handle post-payment auto-login
+        window.addEventListener('DOMContentLoaded', async () => {
+
+            // ── 1. Try auto-login if returning from Chariow payment ──
+            const autoLoginRaw = sessionStorage.getItem('thrifty30_autologin');
+            if (autoLoginRaw) {
+                sessionStorage.removeItem('thrifty30_autologin');
+                try {
+                    const { email, password } = JSON.parse(autoLoginRaw);
+                    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+                    if (!error && data?.user) {
+                        currentUser = data.user;
+                        updateNavAuth();
+                        // Small delay for page to render, then open program directly
+                        setTimeout(() => {
+                            showToast('🎉 Payment confirmed! Welcome to Thrifty30!');
+                            goToApp();
+                        }, 400);
+                        return; // Skip session check below
+                    }
+                } catch(e) { console.warn('Auto-login failed:', e); }
+            }
+
+            // ── 2. Check for existing persistent session (returning user) ──
+            const { data } = await sb.auth.getSession();
+            if (data?.session?.user) {
+                currentUser = data.session.user;
+                updateNavAuth();
+                // Auto-open program if session is active
+                setTimeout(() => goToApp(), 300);
+            }
+        });
+
+        window.onload = function() {
+            updateProgressBar();
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        };
+    </script>
+</body>
+</html>
